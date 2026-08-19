@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Comment;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -50,4 +51,22 @@ public class DineReserveFile extends DineReserveBase {
     @Comment("용도")
     @Column(name = "file_usage", nullable = false, length = 20)
     private String fileUsage;
+
+    public static DineReserveFile create(UUID fileUUID, String fileOrgName, String fileSaveName, Long fileSize, String fileType, String fileExtension, String filePath, String fileUsage) {
+        DineReserveFile dineReserveFile = new DineReserveFile();
+        dineReserveFile.setFileUUID(fileUUID);
+        dineReserveFile.setFileOrgName(fileOrgName);
+        dineReserveFile.setFileSaveName(fileSaveName);
+        dineReserveFile.setFileSize(fileSize);
+        dineReserveFile.setFileType(fileType);
+        dineReserveFile.setFileExtension(fileExtension);
+        dineReserveFile.setFilePath(filePath);
+        dineReserveFile.setFileUsage(fileUsage);
+
+        dineReserveFile.setUseFlag(true);
+        dineReserveFile.setInsertDate(LocalDateTime.now());
+        dineReserveFile.setUpdateDate(LocalDateTime.now());
+
+        return dineReserveFile;
+    }
 }
