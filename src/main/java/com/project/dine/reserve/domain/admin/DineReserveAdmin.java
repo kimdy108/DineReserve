@@ -6,7 +6,7 @@ import com.project.dine.reserve.dto.constant.admin.AdminRole;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Comment;
 
 import java.time.LocalDateTime;
@@ -15,15 +15,25 @@ import java.util.UUID;
 @Entity
 @Table(name = "dine_reserve_admin", indexes = {
         @Index(name = "idx_admin_uuid", columnList = "admin_uuid"),
+        @Index(name = "idx_store_seq", columnList = "store_seq"),
+        @Index(name = "idx_store_uuid", columnList = "store_uuid"),
         @Index(name = "idx_admin_id", columnList = "admin_id"),
         @Index(name = "idx_admin_name", columnList = "admin_name")
 })
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter(AccessLevel.PROTECTED)
 public class DineReserveAdmin extends DineReserveBase {
     @Comment("관리자 UUID")
     @Column(name = "admin_uuid", length = 50, unique = true, nullable = false, updatable = false)
     private UUID adminUUID;
+
+    @Comment("매장 SEQ")
+    @Column(name = "store_seq", length = 20, nullable = false)
+    private Long storeSeq;
+
+    @Comment("매장 UUID")
+    @Column(name = "store_uuid", length = 50, nullable = false)
+    private UUID storeUUID;
 
     @Comment("관리자 ID")
     @Column(name = "admin_id", length = 20, unique = true, nullable = false, updatable = false)
