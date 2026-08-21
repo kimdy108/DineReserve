@@ -3,6 +3,8 @@ package com.project.dine.reserve.domain.member;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.dine.reserve.domain.common.DineReserveBase;
 import com.project.dine.reserve.dto.constant.member.MemberStatusType;
+import com.project.dine.reserve.dto.member.MemberSignup;
+import com.project.dine.reserve.dto.member.MemberUpdate;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -58,4 +60,52 @@ public class DineReserveMember extends DineReserveBase {
     @Comment("비고")
     @Column(name = "member_description", columnDefinition = "TEXT")
     private String memberDescription;
+
+    public static DineReserveMember create(MemberSignup memberSignup, String memberPassword) {
+        DineReserveMember dineReserveMember = new DineReserveMember();
+        dineReserveMember.setMemberUUID(UUID.randomUUID());
+        dineReserveMember.setMemberID(memberSignup.getMemberID());
+        dineReserveMember.setMemberPassword(memberPassword);
+        dineReserveMember.setMemberName(memberSignup.getMemberName());
+        dineReserveMember.setMemberPhone(memberSignup.getMemberPhone());
+        dineReserveMember.setMemberEmail(memberSignup.getMemberEmail());
+        dineReserveMember.setMemberStatus(MemberStatusType.ACTIVE);
+        dineReserveMember.setLastDate(LocalDateTime.parse("2000-01-01T00:00:00"));
+
+        dineReserveMember.setUseFlag(true);
+        dineReserveMember.setInsertDate(LocalDateTime.now());
+        dineReserveMember.setUpdateDate(LocalDateTime.now());
+
+        return dineReserveMember;
+    }
+
+    public void update(MemberUpdate memberUpdate) {
+        this.memberName = memberUpdate.getMemberName();
+        this.memberPhone = memberUpdate.getMemberPhone();
+        this.memberEmail = memberUpdate.getMemberEmail();
+        this.memberDescription = memberUpdate.getMemberDescription();
+
+        this.setUpdateDate(LocalDateTime.now());
+    }
+
+    public void updatePassword(String memberPassword) {
+        this.memberPassword = memberPassword;
+
+        this.setUpdateDate(LocalDateTime.now());
+    }
+
+    public void updateStatus(MemberStatusType memberStatus) {
+        this.memberStatus = memberStatus;
+
+        this.setUpdateDate(LocalDateTime.now());
+    }
+
+    public void updateUseFlag(boolean useFlag) {
+        this.setUseFlag(useFlag);
+        this.setUpdateDate(LocalDateTime.now());
+    }
+
+    public void updateLastDate() {
+        this.lastDate = LocalDateTime.now();
+    }
 }

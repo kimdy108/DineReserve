@@ -24,13 +24,15 @@ public class WebSecurityConfig {
     private final String SWAGGER_API = "/swagger-ui/**";
     private final String SWAGGER_HTML_API = "/swagger-ui.html";
     private final String V3_DOCKS_API = "/v3/api-docs/**";
+    private final String MEMBER_SIGNUP = "/api/dine/reserve/member/signup";
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return webSecurity -> webSecurity.ignoring().requestMatchers(
                 SWAGGER_API,
                 SWAGGER_HTML_API,
-                V3_DOCKS_API
+                V3_DOCKS_API,
+                MEMBER_SIGNUP
         );
     }
 

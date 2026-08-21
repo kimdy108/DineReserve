@@ -90,7 +90,7 @@ server:
 logging:
   level:
     root: error
-    com.project.dine.reserve.api: debug
+    com.project.dine.reserve: debug
     org.hibernate.resource: info
     com.zaxxer.hikari.pool.HikariPool: debug
     com.zaxxer.hikari: trace
@@ -154,7 +154,7 @@ server:
 logging:
   level:
     root: error
-    com.project.dine.reserve.api: debug
+    com.project.dine.reserve: debug
     org.hibernate.resource: info
     com.zaxxer.hikari.pool.HikariPool: debug
     com.zaxxer.hikari: trace
@@ -214,7 +214,7 @@ server:
 logging:
   level:
     root: error
-    com.project.dine.reserve.api: debug
+    com.project.dine.reserve: debug
     org.hibernate.resource: info
     com.zaxxer.hikari.pool.HikariPool: debug
     com.zaxxer.hikari: trace
