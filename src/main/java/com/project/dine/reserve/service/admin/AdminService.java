@@ -71,6 +71,9 @@ public class AdminService {
     }
 
     public Page<AdminList> adminListPage(String searchType, String searchValue, Long offset, int limit) {
+        if (searchType == null) searchType = "";
+        if (searchValue == null) searchValue = "";
+
         Sort sort = Sort.by("seq").descending();
         Pageable pageable = PageRequest.of(offset.intValue(), limit, sort);
 

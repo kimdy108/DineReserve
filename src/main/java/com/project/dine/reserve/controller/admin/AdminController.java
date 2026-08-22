@@ -50,8 +50,8 @@ public class AdminController {
     @Operation(summary = "admin list page", description = "관리자 리스트(페이지)")
     @GetMapping("/list/page")
     public ResponseEntity<BaseResponse<Page<AdminList>>> adminListPage(
-            @RequestParam String searchType,
-            @RequestParam String searchValue,
+            @RequestParam(required = false) String searchType,
+            @RequestParam(required = false) String searchValue,
             @RequestParam Long offset,
             @RequestParam int limit
     ) {

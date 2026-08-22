@@ -57,8 +57,8 @@ public class MemberController {
     @Operation(summary = "member list page", description = "사용자 리스트 (페이지)")
     @GetMapping("/list/page")
     public ResponseEntity<BaseResponse<Page<MemberList>>> memberListPage(
-            @RequestParam String searchType,
-            @RequestParam String searchValue,
+            @RequestParam(required = false) String searchType,
+            @RequestParam(required = false) String searchValue,
             @RequestParam Long offset,
             @RequestParam int limit
     ) {
