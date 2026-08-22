@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum AdminErrorCode implements ErrorCode {
-    NO_ADMIN("존재하지 않는 관리자입니다.");
+    NO_ADMIN("존재하지 않는 관리자입니다."),
+    EXIST_ID("이미 사용중인 아이디입니다.");
 
     private final String message;
 }

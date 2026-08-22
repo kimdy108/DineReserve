@@ -2,6 +2,9 @@ package com.project.dine.reserve.domain.admin;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.dine.reserve.domain.common.DineReserveBase;
+import com.project.dine.reserve.domain.store.DineReserveStoreInfo;
+import com.project.dine.reserve.dto.auth.admin.AdminRegist;
+import com.project.dine.reserve.dto.auth.admin.AdminUpdate;
 import com.project.dine.reserve.dto.constant.admin.AdminRole;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -68,4 +71,49 @@ public class DineReserveAdmin extends DineReserveBase {
     @Comment("비고")
     @Column(name = "admin_description", columnDefinition = "TEXT")
     private String adminDescription;
+
+    public static DineReserveAdmin create(AdminRegist adminRegist, String adminPassword, Long storeSeq, UUID storeUUID) {
+        DineReserveAdmin dineReserveAdmin = new DineReserveAdmin();
+        dineReserveAdmin.setAdminUUID(UUID.randomUUID());
+        dineReserveAdmin.setStoreSeq(storeSeq);
+        dineReserveAdmin.setStoreUUID(storeUUID);
+        dineReserveAdmin.setAdminID(adminRegist.getAdminID());
+        dineReserveAdmin.setAdminPassword(adminPassword);
+        dineReserveAdmin.setAdminName(adminRegist.getAdminName());
+        dineReserveAdmin.setAdminPhone(adminRegist.getAdminPhone());
+        dineReserveAdmin.setAdminEmail(adminRegist.getAdminEmail());
+        dineReserveAdmin.setAdminRole(adminRegist.getAdminRole());
+        dineReserveAdmin.setLastDate(LocalDateTime.parse("2000-01-29T00:00:00"));
+        dineReserveAdmin.setAdminDescription(adminRegist.getAdminDescription());
+
+        dineReserveAdmin.setUseFlag(true);
+        dineReserveAdmin.setInsertDate(LocalDateTime.now());
+        dineReserveAdmin.setUpdateDate(LocalDateTime.now());
+
+        return dineReserveAdmin;
+    }
+
+    public void update(AdminUpdate adminUpdate) {
+        this.adminName = adminUpdate.getAdminName();
+        this.adminPhone = adminUpdate.getAdminPhone();
+        this.adminEmail = adminUpdate.getAdminEmail();
+        this.adminRole = adminUpdate.getAdminRole();
+
+        this.setUpdateDate(LocalDateTime.now());
+    }
+
+    public void updatePassword(String adminPassword) {
+        this.adminPassword = adminPassword;
+
+        this.setUpdateDate(LocalDateTime.now());
+    }
+
+    public void updateUseFlag(boolean useFlag) {
+        this.setUseFlag(useFlag);
+        this.setUpdateDate(LocalDateTime.now());
+    }
+
+    public void updateLastDate() {
+        this.lastDate = LocalDateTime.now();
+    }
 }
