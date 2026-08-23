@@ -34,6 +34,14 @@ public class SwaggerConfig {
     }
 
     @Bean
+    public GroupedOpenApi authApi() {
+        return GroupedOpenApi.builder()
+                .group("인증 관리 API")
+                .pathsToMatch("/api/auth/**")
+                .build();
+    }
+
+    @Bean
     public GroupedOpenApi adminApi() {
         return GroupedOpenApi.builder()
                 .group("관리자 관리 API")
