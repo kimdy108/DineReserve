@@ -2,7 +2,7 @@ package com.project.dine.reserve.service.admin;
 
 import com.project.dine.reserve.config.exception.DineReserveException;
 import com.project.dine.reserve.domain.admin.DineReserveAdmin;
-import com.project.dine.reserve.dto.auth.admin.*;
+import com.project.dine.reserve.dto.admin.*;
 import com.project.dine.reserve.dto.constant.admin.AdminRole;
 import com.project.dine.reserve.dto.constant.error.AdminErrorCode;
 import com.project.dine.reserve.dto.constant.error.AuthErrorCode;

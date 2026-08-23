@@ -1,6 +1,6 @@
 package com.project.dine.reserve.controller.admin;
 
-import com.project.dine.reserve.dto.auth.admin.*;
+import com.project.dine.reserve.dto.admin.*;
 import com.project.dine.reserve.dto.common.BaseResponse;
 import com.project.dine.reserve.service.admin.AdminService;
 import io.swagger.v3.oas.annotations.Operation;

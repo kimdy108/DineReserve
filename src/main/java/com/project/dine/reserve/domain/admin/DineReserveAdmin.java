@@ -2,9 +2,8 @@ package com.project.dine.reserve.domain.admin;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.dine.reserve.domain.common.DineReserveBase;
-import com.project.dine.reserve.domain.store.DineReserveStoreInfo;
-import com.project.dine.reserve.dto.auth.admin.AdminRegist;
-import com.project.dine.reserve.dto.auth.admin.AdminUpdate;
+import com.project.dine.reserve.dto.admin.AdminRegist;
+import com.project.dine.reserve.dto.admin.AdminUpdate;
 import com.project.dine.reserve.dto.constant.admin.AdminRole;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

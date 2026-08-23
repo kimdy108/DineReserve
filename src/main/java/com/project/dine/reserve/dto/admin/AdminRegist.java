@@ -1,4 +1,4 @@
-package com.project.dine.reserve.dto.auth.admin;
+package com.project.dine.reserve.dto.admin;
 
 import com.project.dine.reserve.dto.constant.admin.AdminRole;
 import lombok.AllArgsConstructor;

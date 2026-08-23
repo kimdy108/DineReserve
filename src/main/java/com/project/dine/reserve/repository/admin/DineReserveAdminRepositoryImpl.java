@@ -2,7 +2,7 @@ package com.project.dine.reserve.repository.admin;
 
 import com.project.dine.reserve.domain.admin.QDineReserveAdmin;
 import com.project.dine.reserve.domain.store.QDineReserveStoreInfo;
-import com.project.dine.reserve.dto.auth.admin.AdminList;
+import com.project.dine.reserve.dto.admin.AdminList;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;

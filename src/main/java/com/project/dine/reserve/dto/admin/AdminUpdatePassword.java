@@ -1,4 +1,4 @@
-package com.project.dine.reserve.dto.auth.admin;
+package com.project.dine.reserve.dto.admin;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
