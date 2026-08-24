@@ -2,11 +2,14 @@ package com.project.dine.reserve.service.admin;
 
 import com.project.dine.reserve.config.exception.DineReserveException;
 import com.project.dine.reserve.domain.admin.DineReserveAdmin;
+import com.project.dine.reserve.domain.store.DineReserveStoreInfo;
 import com.project.dine.reserve.dto.admin.*;
 import com.project.dine.reserve.dto.constant.admin.AdminRole;
 import com.project.dine.reserve.dto.constant.error.AdminErrorCode;
 import com.project.dine.reserve.dto.constant.error.AuthErrorCode;
+import com.project.dine.reserve.dto.constant.error.StoreErrorCode;
 import com.project.dine.reserve.repository.admin.DineReserveAdminRepository;
+import com.project.dine.reserve.repository.store.DineReserveStoreInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,15 +21,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-import static com.project.dine.reserve.util.Common.EMPTY_SEQ;
-import static com.project.dine.reserve.util.Common.EMPTY_UUID;
-
 @Service
 @RequiredArgsConstructor
 public class AdminService {
     private final BCryptPasswordEncoder passwordEncoder;
 
     private final DineReserveAdminRepository dineReserveAdminRepository;
+    private final DineReserveStoreInfoRepository dineReserveStoreInfoRepository;
 
     @Transactional
     public void adminRegist(AdminRegist adminRegist) {
@@ -34,13 +35,13 @@ public class AdminService {
             throw new DineReserveException(AdminErrorCode.EXIST_ID);
         });
 
-        Long storeSeq = EMPTY_SEQ;
-        UUID storeUUID = EMPTY_UUID;
+        DineReserveStoreInfo dineReserveStoreInfo = null;
         if (!AdminRole.ADMIN.equals(adminRegist.getAdminRole())) {
-            // todo 매장 찾기..
+            dineReserveStoreInfo = dineReserveStoreInfoRepository.findByStoreUUID(adminRegist.getStoreUUID())
+                    .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_INFO));
         }
 
-        DineReserveAdmin dineReserveAdmin = DineReserveAdmin.create(adminRegist, passwordEncoder.encode(adminRegist.getAdminPassword()), storeSeq, storeUUID);
+        DineReserveAdmin dineReserveAdmin = DineReserveAdmin.create(adminRegist, passwordEncoder.encode(adminRegist.getAdminPassword()), dineReserveStoreInfo);
         dineReserveAdminRepository.save(dineReserveAdmin);
     }
 

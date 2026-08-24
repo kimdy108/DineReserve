@@ -5,6 +5,7 @@ import com.project.dine.reserve.domain.store.DineReserveStoreCategory;
 import com.project.dine.reserve.dto.constant.error.StoreErrorCode;
 import com.project.dine.reserve.dto.store.category.*;
 import com.project.dine.reserve.repository.store.DineReserveStoreCategoryRepository;
+import com.project.dine.reserve.repository.store.DineReserveStoreInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class StoreCategoryService {
     private final DineReserveStoreCategoryRepository dineReserveStoreCategoryRepository;
+    private final DineReserveStoreInfoRepository dineReserveStoreInfoRepository;
 
     @Transactional
     public void storeCategoryRegist(StoreCategoryRegist storeCategoryRegist) {
@@ -44,7 +46,8 @@ public class StoreCategoryService {
         DineReserveStoreCategory dineReserveStoreCategory = dineReserveStoreCategoryRepository.findByCategoryUUID(categoryUUID)
                 .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_CATEGORY));
 
-        // todo 해당 카테고리에 존재하는 매장이 있는지 check
+        int count = dineReserveStoreInfoRepository.countByCategoryUUID(dineReserveStoreCategory.getCategoryUUID());
+        if (count > 0) throw new DineReserveException(StoreErrorCode.USE_CATEGORY);
 
         dineReserveStoreCategoryRepository.delete(dineReserveStoreCategory);
     }

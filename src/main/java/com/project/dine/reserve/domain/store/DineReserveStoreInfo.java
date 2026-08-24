@@ -1,6 +1,9 @@
 package com.project.dine.reserve.domain.store;
 
 import com.project.dine.reserve.domain.common.DineReserveBase;
+import com.project.dine.reserve.domain.system.DineReserveFile;
+import com.project.dine.reserve.dto.store.info.StoreInfoRegist;
+import com.project.dine.reserve.dto.store.info.StoreInfoUpdate;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
@@ -10,7 +13,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Comment;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
+
+import static com.project.dine.reserve.util.Common.EMPTY_SEQ;
+import static com.project.dine.reserve.util.Common.EMPTY_UUID;
 
 @Entity
 @Table(name = "dine_reserve_store_info", indexes = {
@@ -79,4 +86,46 @@ public class DineReserveStoreInfo extends DineReserveBase {
     @Comment("매장 비고")
     @Column(name = "store_description", columnDefinition = "TEXT")
     private String storeDescription;
+
+    public static DineReserveStoreInfo create(StoreInfoRegist storeInfoRegist, DineReserveStoreCategory dineReserveStoreCategory, DineReserveFile storeImg, DineReserveFile storeMap) {
+        DineReserveStoreInfo dineReserveStoreInfo = new DineReserveStoreInfo();
+        dineReserveStoreInfo.setStoreUUID(UUID.randomUUID());
+        dineReserveStoreInfo.setCategorySeq(dineReserveStoreCategory.getSeq());
+        dineReserveStoreInfo.setCategoryUUID(dineReserveStoreCategory.getCategoryUUID());
+        dineReserveStoreInfo.setStoreImgSeq(storeImg == null ? EMPTY_SEQ : storeImg.getSeq());
+        dineReserveStoreInfo.setStoreImgUUID(storeImg == null ? EMPTY_UUID : storeImg.getFileUUID());
+        dineReserveStoreInfo.setStoreMapSeq(storeMap == null ? EMPTY_SEQ : storeMap.getSeq());
+        dineReserveStoreInfo.setStoreMapUUID(storeMap == null ? EMPTY_UUID : storeMap.getFileUUID());
+        dineReserveStoreInfo.setStoreName(storeInfoRegist.getStoreName());
+        dineReserveStoreInfo.setStoreRegistrationNumber(storeInfoRegist.getStoreRegistrationNumber());
+        dineReserveStoreInfo.setStoreOwnerName(storeInfoRegist.getStoreOwnerName());
+        dineReserveStoreInfo.setStoreNumber(storeInfoRegist.getStoreNumber());
+        dineReserveStoreInfo.setStoreAddress(storeInfoRegist.getStoreAddress());
+        dineReserveStoreInfo.setStoreDescription(storeInfoRegist.getStoreDescription());
+
+        dineReserveStoreInfo.setUseFlag(true);
+        dineReserveStoreInfo.setInsertDate(LocalDateTime.now());
+        dineReserveStoreInfo.setUpdateDate(LocalDateTime.now());
+
+        return dineReserveStoreInfo;
+    }
+
+    public void update(StoreInfoUpdate storeInfoUpdate, DineReserveFile storeImg, DineReserveFile storeMap) {
+        this.storeImgSeq = storeImg == null ? EMPTY_SEQ : storeImg.getSeq();
+        this.storeImgUUID = storeImg == null ? EMPTY_UUID : storeImg.getFileUUID();
+        this.storeMapSeq = storeMap == null ? EMPTY_SEQ : storeMap.getSeq();
+        this.storeMapUUID = storeMap == null ? EMPTY_UUID : storeMap.getFileUUID();
+        this.storeName = storeInfoUpdate.getStoreName();
+        this.storeOwnerName = storeInfoUpdate.getStoreOwnerName();
+        this.storeNumber = storeInfoUpdate.getStoreNumber();
+        this.storeAddress = storeInfoUpdate.getStoreAddress();
+        this.storeDescription = storeInfoUpdate.getStoreDescription();
+
+        this.setUpdateDate(LocalDateTime.now());
+    }
+
+    public void updateUseFlag(boolean useFlag) {
+        this.setUseFlag(useFlag);
+        this.setUpdateDate(LocalDateTime.now());
+    }
 }

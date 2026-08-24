@@ -2,6 +2,7 @@ package com.project.dine.reserve.domain.admin;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.dine.reserve.domain.common.DineReserveBase;
+import com.project.dine.reserve.domain.store.DineReserveStoreInfo;
 import com.project.dine.reserve.dto.admin.AdminRegist;
 import com.project.dine.reserve.dto.admin.AdminUpdate;
 import com.project.dine.reserve.dto.constant.admin.AdminRole;
@@ -13,6 +14,9 @@ import org.hibernate.annotations.Comment;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+import static com.project.dine.reserve.util.Common.EMPTY_SEQ;
+import static com.project.dine.reserve.util.Common.EMPTY_UUID;
 
 @Entity
 @Table(name = "dine_reserve_admin", indexes = {
@@ -71,11 +75,11 @@ public class DineReserveAdmin extends DineReserveBase {
     @Column(name = "admin_description", columnDefinition = "TEXT")
     private String adminDescription;
 
-    public static DineReserveAdmin create(AdminRegist adminRegist, String adminPassword, Long storeSeq, UUID storeUUID) {
+    public static DineReserveAdmin create(AdminRegist adminRegist, String adminPassword, DineReserveStoreInfo dineReserveStoreInfo) {
         DineReserveAdmin dineReserveAdmin = new DineReserveAdmin();
         dineReserveAdmin.setAdminUUID(UUID.randomUUID());
-        dineReserveAdmin.setStoreSeq(storeSeq);
-        dineReserveAdmin.setStoreUUID(storeUUID);
+        dineReserveAdmin.setStoreSeq(dineReserveStoreInfo == null ? EMPTY_SEQ : dineReserveStoreInfo.getSeq());
+        dineReserveAdmin.setStoreUUID(dineReserveStoreInfo == null ? EMPTY_UUID : dineReserveStoreInfo.getStoreUUID());
         dineReserveAdmin.setAdminID(adminRegist.getAdminID());
         dineReserveAdmin.setAdminPassword(adminPassword);
         dineReserveAdmin.setAdminName(adminRegist.getAdminName());
