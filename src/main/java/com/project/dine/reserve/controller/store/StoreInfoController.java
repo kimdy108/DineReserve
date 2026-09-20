@@ -35,9 +35,9 @@ public class StoreInfoController {
     }
 
     @Operation(summary = "store info delete", description = "매장 삭제")
-    @DeleteMapping("/delete/{storeInfoUUID}")
-    public ResponseEntity<BaseResponse<Void>> storeInfoDelete(@PathVariable UUID storeInfoUUID) {
-        storeInfoService.storeInfoDelete(storeInfoUUID);
+    @DeleteMapping("/delete/{storeUUID}")
+    public ResponseEntity<BaseResponse<Void>> storeInfoDelete(@PathVariable UUID storeUUID) {
+        storeInfoService.storeInfoDelete(storeUUID);
         return ResponseEntity.ok(BaseResponse.success("매장이 삭제되었습니다."));
     }
 
@@ -70,9 +70,9 @@ public class StoreInfoController {
     }
 
     @Operation(summary = "store info info", description = "매장 정보")
-    @GetMapping("/info/{storeInfoUUID}")
-    public ResponseEntity<BaseResponse<StoreInfoInfo>> storeInfoInfo(@PathVariable UUID storeInfoUUID) {
-        var result = storeInfoService.storeInfoInfo(storeInfoUUID);
+    @GetMapping("/info/{storeUUID}")
+    public ResponseEntity<BaseResponse<StoreInfoInfo>> storeInfoInfo(@PathVariable UUID storeUUID) {
+        var result = storeInfoService.storeInfoInfo(storeUUID);
         return ResponseEntity.ok(BaseResponse.success(result, "매장 정보가 조회되었습니다."));
     }
 }

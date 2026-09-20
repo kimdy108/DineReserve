@@ -26,6 +26,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class StoreInfoService {
     private final FileService fileService;
+    private final StoreInfoScheduleService storeInfoScheduleService;
 
     private final DineReserveFileRepository dineReserveFileRepository;
 
@@ -64,11 +65,14 @@ public class StoreInfoService {
     }
 
     @Transactional
-    public void storeInfoDelete(UUID storeInfoUUID) {
-        DineReserveStoreInfo dineReserveStoreInfo = dineReserveStoreInfoRepository.findByStoreUUID(storeInfoUUID)
+    public void storeInfoDelete(UUID storeUUID) {
+        DineReserveStoreInfo dineReserveStoreInfo = dineReserveStoreInfoRepository.findByStoreUUID(storeUUID)
                 .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_INFO));
 
         dineReserveStoreInfoRepository.delete(dineReserveStoreInfo);
+
+        // 매장 스케줄 삭제
+        storeInfoScheduleService.storeInfoScheduleDelete(storeUUID);
     }
 
     @Transactional
@@ -95,8 +99,8 @@ public class StoreInfoService {
         return dineReserveStoreInfoRepository.findStoreInfoListAll();
     }
 
-    public StoreInfoInfo storeInfoInfo(UUID storeInfoUUID) {
-        DineReserveStoreInfo dineReserveStoreInfo = dineReserveStoreInfoRepository.findByStoreUUID(storeInfoUUID)
+    public StoreInfoInfo storeInfoInfo(UUID storeUUID) {
+        DineReserveStoreInfo dineReserveStoreInfo = dineReserveStoreInfoRepository.findByStoreUUID(storeUUID)
                 .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_INFO));
 
         DineReserveStoreCategory dineReserveStoreCategory = dineReserveStoreCategoryRepository.findByCategoryUUID(dineReserveStoreInfo.getCategoryUUID())
