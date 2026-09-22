@@ -69,6 +69,9 @@ public class StoreInfoService {
         DineReserveStoreInfo dineReserveStoreInfo = dineReserveStoreInfoRepository.findByStoreUUID(storeUUID)
                 .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_INFO));
 
+        fileService.deleteFile(dineReserveStoreInfo.getStoreImgUUID());
+        fileService.deleteFile(dineReserveStoreInfo.getStoreMapUUID());
+
         dineReserveStoreInfoRepository.delete(dineReserveStoreInfo);
 
         // 매장 스케줄 삭제
