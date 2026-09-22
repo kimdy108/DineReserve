@@ -54,11 +54,11 @@ public class StoreInfoService {
         DineReserveStoreInfo dineReserveStoreInfo = dineReserveStoreInfoRepository.findByStoreUUID(storeInfoUpdate.getStoreUUID())
                 .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_INFO));
 
-        DineReserveFile storeImg = storeInfoUpdate.getStoreImg() == null ? dineReserveFileRepository.findByFileUUID(dineReserveStoreInfo.getStoreImgUUID())
-                .orElseThrow(() -> new DineReserveException(SystemErrorCode.NO_FILE)) :
+        DineReserveFile storeImg = storeInfoUpdate.getStoreImg() == null ?
+                dineReserveFileRepository.findByFileUUID(dineReserveStoreInfo.getStoreImgUUID()).orElse(null) :
                 fileService.updateFile(dineReserveStoreInfo.getStoreImgUUID(), storeInfoUpdate.getStoreImg(), "store", "img");
-        DineReserveFile storeMap = storeInfoUpdate.getStoreMap() == null ? dineReserveFileRepository.findByFileUUID(dineReserveStoreInfo.getStoreMapUUID())
-                .orElseThrow(() -> new DineReserveException(SystemErrorCode.NO_FILE)) :
+        DineReserveFile storeMap = storeInfoUpdate.getStoreMap() == null ?
+                dineReserveFileRepository.findByFileUUID(dineReserveStoreInfo.getStoreMapUUID()).orElse(null) :
                 fileService.updateFile(dineReserveStoreInfo.getStoreMapUUID(), storeInfoUpdate.getStoreMap(), "store", "map");
 
         dineReserveStoreInfo.update(storeInfoUpdate, storeImg, storeMap);

@@ -58,8 +58,8 @@ public class FileService {
     }
 
     public void deleteFile(UUID fileUUID) {
-        DineReserveFile dineReserveFile = dineReserveFileRepository.findByFileUUID(fileUUID)
-                .orElseThrow(() -> new DineReserveException(SystemErrorCode.NO_FILE));
+        DineReserveFile dineReserveFile = dineReserveFileRepository.findByFileUUID(fileUUID).orElse(null);
+        if (dineReserveFile == null) return;
 
         try {
             Path path = Paths.get(filePath + "/" + dineReserveFile.getFilePath() + "/" + dineReserveFile.getFileUsage() + "/" + dineReserveFile.getFileSaveName());
