@@ -20,7 +20,8 @@ import java.util.UUID;
 @Table(name = "dine_reserve_menu_category", indexes = {
         @Index(name = "idx_menu_category_uuid", columnList = "menu_category_uuid"),
         @Index(name = "idx_store_uuid", columnList = "store_uuid"),
-        @Index(name = "idx_menu_category_name", columnList = "menu_category_name")
+        @Index(name = "idx_menu_category_name", columnList = "menu_category_name"),
+        @Index(name = "idx_menu_category_sequence", columnList = "menu_category_sequence")
 })
 @Getter
 @Setter(AccessLevel.PROTECTED)
@@ -42,16 +43,16 @@ public class DineReserveMenuCategory extends DineReserveBase {
     private String menuCategoryName;
 
     @Comment("메뉴 카테고리 순서")
-    @Column(name = "menu_category_order", length = 10, nullable = false)
-    private int menuCategoryOrder;
+    @Column(name = "menu_category_sequence", length = 10, nullable = false)
+    private int menuCategorySequence;
 
-    public static DineReserveMenuCategory create(MenuCategoryRegist menuCategoryRegist, int maxOrder, DineReserveStoreInfo dineReserveStoreInfo) {
+    public static DineReserveMenuCategory create(MenuCategoryRegist menuCategoryRegist, int maxSequence, DineReserveStoreInfo dineReserveStoreInfo) {
         DineReserveMenuCategory dineReserveMenuCategory = new DineReserveMenuCategory();
         dineReserveMenuCategory.setMenuCategoryUUID(UUID.randomUUID());
         dineReserveMenuCategory.setStoreSeq(dineReserveStoreInfo.getSeq());
         dineReserveMenuCategory.setStoreUUID(dineReserveStoreInfo.getStoreUUID());
         dineReserveMenuCategory.setMenuCategoryName(menuCategoryRegist.getMenuCategoryName());
-        dineReserveMenuCategory.setMenuCategoryOrder(maxOrder + 1);
+        dineReserveMenuCategory.setMenuCategorySequence(maxSequence + 1);
 
         dineReserveMenuCategory.setUseFlag(true);
         dineReserveMenuCategory.setInsertDate(LocalDateTime.now());
@@ -66,8 +67,8 @@ public class DineReserveMenuCategory extends DineReserveBase {
         this.setUpdateDate(LocalDateTime.now());
     }
 
-    public void updateOrder(int order) {
-        this.menuCategoryOrder = order;
+    public void updateCategorySequence(int menuCategorySequence) {
+        this.menuCategorySequence = menuCategorySequence;
 
         this.setUpdateDate(LocalDateTime.now());
     }

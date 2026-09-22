@@ -23,7 +23,7 @@ public class DineReserveMenuCategoryRepositoryImpl implements DineReserveMenuCat
 
     @Override
     public List<MenuCategoryListAll> findMenuCategoryListAll(UUID storeUUID) {
-        OrderSpecifier<?> sortedColumn = qDineReserveMenuCategory.menuCategoryOrder.asc();
+        OrderSpecifier<?> sortedColumn = qDineReserveMenuCategory.menuCategorySequence.asc();
 
         BooleanBuilder bb = new BooleanBuilder();
         bb.and(qDineReserveMenuCategory.storeUUID.eq(storeUUID));
@@ -33,7 +33,7 @@ public class DineReserveMenuCategoryRepositoryImpl implements DineReserveMenuCat
                         MenuCategoryListAll.class,
                         qDineReserveMenuCategory.menuCategoryUUID.as("menuCategoryUUID"),
                         qDineReserveMenuCategory.menuCategoryName.as("menuCategoryName"),
-                        qDineReserveMenuCategory.menuCategoryOrder.as("menuCategoryOrder"),
+                        qDineReserveMenuCategory.menuCategorySequence.as("menuCategorySequence"),
                         qDineReserveMenuCategory.useFlag.as("useFlag")
                 ))
                 .from(qDineReserveMenuCategory)

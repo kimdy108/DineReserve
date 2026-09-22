@@ -47,10 +47,10 @@ public class MenuCategoryController {
         return ResponseEntity.ok(BaseResponse.success("메뉴 카테고리 활성화 / 비활성화 여부가 수정되었습니다."));
     }
 
-    @Operation(summary = "menu category order", description = "메뉴 카테고리 순서")
-    @PutMapping("/order")
-    public ResponseEntity<BaseResponse<Void>> menuCategoryOrder(@RequestBody MenuCategoryOrderUpdate menuCategoryOrderUpdate) {
-        menuCategoryService.menuCategoryOrder(menuCategoryOrderUpdate);
+    @Operation(summary = "menu category sequence", description = "메뉴 카테고리 순서")
+    @PutMapping("/sequence")
+    public ResponseEntity<BaseResponse<Void>> menuCategorySequence(@RequestBody MenuCategorySequenceUpdate menuCategorySequenceUpdate) {
+        menuCategoryService.menuCategorySequence(menuCategorySequenceUpdate);
         return ResponseEntity.ok(BaseResponse.success("메뉴 카테고리 순서가 수정되었습니다."));
     }
 

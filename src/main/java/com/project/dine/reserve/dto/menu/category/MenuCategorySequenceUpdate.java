@@ -10,7 +10,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuCategoryOrderUpdate {
+public class MenuCategorySequenceUpdate {
     private UUID storeUUID;
-    private List<MenuCategoryOrder> menuCategoryOrderList;
+    private List<MenuCategorySequence> menuCategorySequenceList;
 }

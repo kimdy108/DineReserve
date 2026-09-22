@@ -12,7 +12,7 @@ import java.util.UUID;
 public class MenuCategoryListAll {
     private UUID menuCategoryUUID;
     private String menuCategoryName;
-    private int menuCategoryOrder;
+    private int menuCategorySequence;
     private boolean useFlag;
     private int menuInfoCount;
 }

@@ -17,6 +17,6 @@ public interface DineReserveMenuCategoryRepository extends JpaRepository<DineRes
 
     List<DineReserveMenuCategory> findAllByStoreUUID(UUID storeUUID);
 
-    @Query(value = "select coalesce(max(menuCategoryOrder), 0) from DineReserveMenuCategory where storeUUID = :storeUUID")
-    int countMaxOrderByStoreUUID(UUID storeUUID);
+    @Query(value = "select coalesce(max(menuCategorySequence), 0) from DineReserveMenuCategory where storeUUID = :storeUUID")
+    int countMaxSequenceByStoreUUID(UUID storeUUID);
 }

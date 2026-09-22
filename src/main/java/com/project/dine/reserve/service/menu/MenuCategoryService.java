@@ -33,9 +33,9 @@ public class MenuCategoryService {
             throw new DineReserveException(MenuErrorCode.EXIST_MENU_CATEGORY);
         });
 
-        int maxOrder = dineReserveMenuCategoryRepository.countMaxOrderByStoreUUID(dineReserveStoreInfo.getStoreUUID());
+        int maxSequence = dineReserveMenuCategoryRepository.countMaxSequenceByStoreUUID(dineReserveStoreInfo.getStoreUUID());
 
-        DineReserveMenuCategory dineReserveMenuCategory = DineReserveMenuCategory.create(menuCategoryRegist, maxOrder, dineReserveStoreInfo);
+        DineReserveMenuCategory dineReserveMenuCategory = DineReserveMenuCategory.create(menuCategoryRegist, maxSequence, dineReserveStoreInfo);
         dineReserveMenuCategoryRepository.save(dineReserveMenuCategory);
     }
 
@@ -66,14 +66,14 @@ public class MenuCategoryService {
     }
 
     @Transactional
-    public void menuCategoryOrder(MenuCategoryOrderUpdate menuCategoryOrderUpdate) {
-        List<DineReserveMenuCategory> dineReserveMenuCategoryList = dineReserveMenuCategoryRepository.findAllByStoreUUID(menuCategoryOrderUpdate.getStoreUUID());
+    public void menuCategorySequence(MenuCategorySequenceUpdate menuCategorySequenceUpdate) {
+        List<DineReserveMenuCategory> dineReserveMenuCategoryList = dineReserveMenuCategoryRepository.findAllByStoreUUID(menuCategorySequenceUpdate.getStoreUUID());
         Map<UUID, DineReserveMenuCategory> dineReserveMenuCategoryMap = dineReserveMenuCategoryList.stream()
                 .collect(Collectors.toMap(DineReserveMenuCategory::getMenuCategoryUUID, Function.identity()));
 
-        for (MenuCategoryOrder menuCategoryOrder : menuCategoryOrderUpdate.getMenuCategoryOrderList()) {
-            DineReserveMenuCategory dineReserveMenuCategory = dineReserveMenuCategoryMap.get(menuCategoryOrder.getMenuCategoryUUID());
-            if (dineReserveMenuCategory != null) dineReserveMenuCategory.updateOrder(menuCategoryOrder.getMenuCategoryOrder());
+        for (MenuCategorySequence menuCategorySequence : menuCategorySequenceUpdate.getMenuCategorySequenceList()) {
+            DineReserveMenuCategory dineReserveMenuCategory = dineReserveMenuCategoryMap.get(menuCategorySequence.getMenuCategoryUUID());
+            if (dineReserveMenuCategory != null) dineReserveMenuCategory.updateCategorySequence(menuCategorySequence.getMenuCategorySequence());
         }
     }
 
