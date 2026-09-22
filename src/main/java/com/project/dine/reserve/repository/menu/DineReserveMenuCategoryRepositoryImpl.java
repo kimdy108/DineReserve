@@ -1,10 +1,13 @@
 package com.project.dine.reserve.repository.menu;
 
 import com.project.dine.reserve.domain.menu.QDineReserveMenuCategory;
+import com.project.dine.reserve.domain.menu.QDineReserveMenuInfo;
 import com.project.dine.reserve.dto.menu.category.MenuCategoryListAll;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 
@@ -20,6 +23,7 @@ public class DineReserveMenuCategoryRepositoryImpl implements DineReserveMenuCat
     }
 
     QDineReserveMenuCategory qDineReserveMenuCategory = QDineReserveMenuCategory.dineReserveMenuCategory;
+    QDineReserveMenuInfo qDineReserveMenuInfo = QDineReserveMenuInfo.dineReserveMenuInfo;
 
     @Override
     public List<MenuCategoryListAll> findMenuCategoryListAll(UUID storeUUID, boolean isTotal) {
@@ -35,7 +39,13 @@ public class DineReserveMenuCategoryRepositoryImpl implements DineReserveMenuCat
                         qDineReserveMenuCategory.menuCategoryUUID.as("menuCategoryUUID"),
                         qDineReserveMenuCategory.menuCategoryName.as("menuCategoryName"),
                         qDineReserveMenuCategory.menuCategorySequence.as("menuCategorySequence"),
-                        qDineReserveMenuCategory.useFlag.as("useFlag")
+                        qDineReserveMenuCategory.useFlag.as("useFlag"),
+                        ExpressionUtils.as(
+                                JPAExpressions.select(qDineReserveMenuInfo.seq.count())
+                                        .from(qDineReserveMenuInfo)
+                                        .where(qDineReserveMenuInfo.menuCategorySeq.eq(qDineReserveMenuCategory.seq))
+                                , "menuInfoCount"
+                        )
                 ))
                 .from(qDineReserveMenuCategory)
                 .where(bb)

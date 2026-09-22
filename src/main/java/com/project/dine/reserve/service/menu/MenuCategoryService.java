@@ -7,6 +7,7 @@ import com.project.dine.reserve.dto.constant.error.MenuErrorCode;
 import com.project.dine.reserve.dto.constant.error.StoreErrorCode;
 import com.project.dine.reserve.dto.menu.category.*;
 import com.project.dine.reserve.repository.menu.DineReserveMenuCategoryRepository;
+import com.project.dine.reserve.repository.menu.DineReserveMenuInfoRepository;
 import com.project.dine.reserve.repository.store.DineReserveStoreInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 public class MenuCategoryService {
     private final DineReserveStoreInfoRepository dineReserveStoreInfoRepository;
     private final DineReserveMenuCategoryRepository dineReserveMenuCategoryRepository;
+    private final DineReserveMenuInfoRepository dineReserveMenuInfoRepository;
 
     @Transactional
     public void menuCategoryRegist(MenuCategoryRegist menuCategoryRegist) {
@@ -52,7 +54,8 @@ public class MenuCategoryService {
         DineReserveMenuCategory dineReserveMenuCategory = dineReserveMenuCategoryRepository.findByMenuCategoryUUID(menuCategoryUUID)
                 .orElseThrow(() -> new DineReserveException(MenuErrorCode.NO_MENU_CATEGORY));
 
-        // todo menu info count
+        int count = dineReserveMenuInfoRepository.countByMenuCategoryUUID(dineReserveMenuCategory.getMenuCategoryUUID());
+        if (count > 0) throw new DineReserveException(MenuErrorCode.USE_MENU_CATEGORY);
 
         dineReserveMenuCategoryRepository.delete(dineReserveMenuCategory);
     }

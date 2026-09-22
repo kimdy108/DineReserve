@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 public enum MenuErrorCode implements ErrorCode {
     NO_MENU_CATEGORY("존재하지 않는 메뉴 카테고리입니다."),
     EXIST_MENU_CATEGORY("이미 존재하는 메뉴 카테고리입니다."),
+    USE_MENU_CATEGORY("사용 중인 메뉴 카테고리입니다."),
     NO_MENU_INFO("존재하지 않는 메뉴입니다.");
 
     private final String message;
