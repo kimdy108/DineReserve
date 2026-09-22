@@ -78,6 +78,10 @@ public class MenuCategoryService {
     }
 
     public List<MenuCategoryListAll> menuCategoryListAll(UUID storeUUID) {
-        return dineReserveMenuCategoryRepository.findMenuCategoryListAll(storeUUID);
+        return dineReserveMenuCategoryRepository.findMenuCategoryListAll(storeUUID, false);
+    }
+
+    public List<MenuCategoryListAll> menuCategoryListTotal(UUID storeUUID) {
+        return dineReserveMenuCategoryRepository.findMenuCategoryListAll(storeUUID, true);
     }
 }

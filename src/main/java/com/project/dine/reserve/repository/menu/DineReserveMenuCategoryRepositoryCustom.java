@@ -8,5 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface DineReserveMenuCategoryRepositoryCustom {
-    List<MenuCategoryListAll> findMenuCategoryListAll(UUID storeUUID);
+    List<MenuCategoryListAll> findMenuCategoryListAll(UUID storeUUID, boolean isTotal);
 }

@@ -60,4 +60,11 @@ public class MenuCategoryController {
         var result = menuCategoryService.menuCategoryListAll(storeUUID);
         return ResponseEntity.ok(BaseResponse.success(result));
     }
+
+    @Operation(summary = "menu category list total", description = "메뉴 카테고리 리스트 (전체 - false 포함)")
+    @GetMapping("/list/total/{storeUUID}")
+    public ResponseEntity<BaseResponse<List<MenuCategoryListAll>>> menuCategoryListTotal(@PathVariable UUID storeUUID) {
+        var result = menuCategoryService.menuCategoryListTotal(storeUUID);
+        return ResponseEntity.ok(BaseResponse.success(result));
+    }
 }

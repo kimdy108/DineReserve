@@ -22,11 +22,12 @@ public class DineReserveMenuCategoryRepositoryImpl implements DineReserveMenuCat
     QDineReserveMenuCategory qDineReserveMenuCategory = QDineReserveMenuCategory.dineReserveMenuCategory;
 
     @Override
-    public List<MenuCategoryListAll> findMenuCategoryListAll(UUID storeUUID) {
+    public List<MenuCategoryListAll> findMenuCategoryListAll(UUID storeUUID, boolean isTotal) {
         OrderSpecifier<?> sortedColumn = qDineReserveMenuCategory.menuCategorySequence.asc();
 
         BooleanBuilder bb = new BooleanBuilder();
         bb.and(qDineReserveMenuCategory.storeUUID.eq(storeUUID));
+        if (!isTotal) bb.and(qDineReserveMenuCategory.useFlag.eq(true));
 
         return jpaQueryFactory
                 .select(Projections.fields(
