@@ -1,6 +1,6 @@
 package com.project.dine.reserve.repository.store;
 
-import com.project.dine.reserve.domain.store.QDineReserveStoreCategory;
+import com.project.dine.reserve.domain.store.QDineReserveStoreCategoryInfo;
 import com.project.dine.reserve.domain.store.QDineReserveStoreInfo;
 import com.project.dine.reserve.dto.store.info.StoreInfoList;
 import com.project.dine.reserve.dto.store.info.StoreInfoListAll;
@@ -26,8 +26,8 @@ public class DineReserveStoreInfoRepositoryImpl implements DineReserveStoreInfoR
         this.jpaQueryFactory = jpaQueryFactory;
     }
 
-    QDineReserveStoreCategory qDineReserveStoreCategory = QDineReserveStoreCategory.dineReserveStoreCategory;
     QDineReserveStoreInfo qDineReserveStoreInfo = QDineReserveStoreInfo.dineReserveStoreInfo;
+    QDineReserveStoreCategoryInfo qDineReserveStoreCategoryInfo = QDineReserveStoreCategoryInfo.dineReserveStoreCategoryInfo;
 
     @Override
     public Page<StoreInfoList> findStoreInfoListPage(String searchType, String searchValue, String categoryUUID, String storeStatus, Long offset, int limit, Pageable pageable) {
@@ -36,7 +36,7 @@ public class DineReserveStoreInfoRepositoryImpl implements DineReserveStoreInfoR
         OrderSpecifier<?> sortedColumn = qDineReserveStoreInfo.seq.desc();
 
         BooleanBuilder bb = new BooleanBuilder();
-        if (!"".equals(categoryUUID)) bb.and(qDineReserveStoreInfo.categoryUUID.eq(UUID.fromString(categoryUUID)));
+        if (!"".equals(categoryUUID)) bb.and(qDineReserveStoreCategoryInfo.categoryUUID.eq(UUID.fromString(categoryUUID)));
 
         switch (storeStatus) {
             case "ACTIVE" -> bb.and(qDineReserveStoreInfo.useFlag.eq(true));
@@ -47,7 +47,6 @@ public class DineReserveStoreInfoRepositoryImpl implements DineReserveStoreInfoR
                 .select(Projections.fields(
                         StoreInfoList.class,
                         qDineReserveStoreInfo.storeUUID.as("storeUUID"),
-                        qDineReserveStoreCategory.categoryName.as("categoryName"),
                         qDineReserveStoreInfo.storeName.as("storeName"),
                         qDineReserveStoreInfo.storeRegistrationNumber.as("storeRegistrationNumber"),
                         qDineReserveStoreInfo.storeAddress.as("storeAddress"),
@@ -56,7 +55,7 @@ public class DineReserveStoreInfoRepositoryImpl implements DineReserveStoreInfoR
                         qDineReserveStoreInfo.insertDate.as("insertDate")
                 ))
                 .from(qDineReserveStoreInfo)
-                .leftJoin(qDineReserveStoreCategory).on(qDineReserveStoreInfo.categorySeq.eq(qDineReserveStoreCategory.seq))
+                .leftJoin(qDineReserveStoreCategoryInfo).on(qDineReserveStoreCategoryInfo.storeSeq.eq(qDineReserveStoreInfo.seq))
                 .where(bb, eqStoreName(searchType, searchValue), eqStoreNumber(searchType, searchValue))
                 .orderBy(sortedColumn)
                 .limit(limit)
@@ -66,7 +65,7 @@ public class DineReserveStoreInfoRepositoryImpl implements DineReserveStoreInfoR
         JPAQuery<Long> countQuery = jpaQueryFactory
                 .select(qDineReserveStoreInfo.seq.count())
                 .from(qDineReserveStoreInfo)
-                .leftJoin(qDineReserveStoreCategory).on(qDineReserveStoreInfo.categorySeq.eq(qDineReserveStoreCategory.seq))
+                .leftJoin(qDineReserveStoreCategoryInfo).on(qDineReserveStoreCategoryInfo.storeSeq.eq(qDineReserveStoreInfo.seq))
                 .where(bb, eqStoreName(searchType, searchValue), eqStoreNumber(searchType, searchValue));
 
         return PageableExecutionUtils.getPage(storeInfoLists, pageable, countQuery::fetchOne);

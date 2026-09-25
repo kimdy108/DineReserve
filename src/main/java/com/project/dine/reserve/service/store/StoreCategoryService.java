@@ -4,8 +4,8 @@ import com.project.dine.reserve.config.exception.DineReserveException;
 import com.project.dine.reserve.domain.store.DineReserveStoreCategory;
 import com.project.dine.reserve.dto.constant.error.StoreErrorCode;
 import com.project.dine.reserve.dto.store.category.*;
+import com.project.dine.reserve.repository.store.DineReserveStoreCategoryInfoRepository;
 import com.project.dine.reserve.repository.store.DineReserveStoreCategoryRepository;
-import com.project.dine.reserve.repository.store.DineReserveStoreInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,7 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class StoreCategoryService {
     private final DineReserveStoreCategoryRepository dineReserveStoreCategoryRepository;
-    private final DineReserveStoreInfoRepository dineReserveStoreInfoRepository;
+    private final DineReserveStoreCategoryInfoRepository dineReserveStoreCategoryInfoRepository;
 
     @Transactional
     public void storeCategoryRegist(StoreCategoryRegist storeCategoryRegist) {
@@ -46,7 +46,7 @@ public class StoreCategoryService {
         DineReserveStoreCategory dineReserveStoreCategory = dineReserveStoreCategoryRepository.findByCategoryUUID(categoryUUID)
                 .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_CATEGORY));
 
-        int count = dineReserveStoreInfoRepository.countByCategoryUUID(dineReserveStoreCategory.getCategoryUUID());
+        int count = dineReserveStoreCategoryInfoRepository.countByCategoryUUID(dineReserveStoreCategory.getCategoryUUID());
         if (count > 0) throw new DineReserveException(StoreErrorCode.USE_CATEGORY);
 
         dineReserveStoreCategoryRepository.delete(dineReserveStoreCategory);

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -17,6 +18,8 @@ public class StoreInfoUpdate {
     private String storeNumber;
     private String storeAddress;
     private String storeDescription;
+
+    private List<UUID> categoryUUIDList;
 
     private MultipartFile storeImg;
     private MultipartFile storeMap;

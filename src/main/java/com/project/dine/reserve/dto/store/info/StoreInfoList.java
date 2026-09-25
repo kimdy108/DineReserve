@@ -12,7 +12,6 @@ import java.util.UUID;
 @NoArgsConstructor
 public class StoreInfoList {
     private UUID storeUUID;
-    private String categoryName;
     private String storeName;
     private String storeRegistrationNumber;
     private String storeAddress;

@@ -22,8 +22,6 @@ import static com.project.dine.reserve.util.Common.EMPTY_UUID;
 @Entity
 @Table(name = "dine_reserve_store_info", indexes = {
         @Index(name = "idx_store_uuid", columnList = "store_uuid"),
-        @Index(name = "idx_category_seq", columnList = "category_seq"),
-        @Index(name = "idx_category_uuid", columnList = "category_uuid"),
         @Index(name = "idx_store_img_seq", columnList = "store_img_seq"),
         @Index(name = "idx_store_img_uuid", columnList = "store_img_uuid"),
         @Index(name = "idx_store_map_seq", columnList = "store_map_seq"),
@@ -38,14 +36,6 @@ public class DineReserveStoreInfo extends DineReserveBase {
     @Comment("매장 UUID")
     @Column(name = "store_uuid", length = 50, nullable = false, unique = true)
     private UUID storeUUID;
-
-    @Comment("카테고리 SEQ")
-    @Column(name = "category_seq", length = 20, nullable = false)
-    private Long categorySeq;
-
-    @Comment("카테고리 UUID")
-    @Column(name = "category_uuid", length = 50, nullable = false)
-    private UUID categoryUUID;
 
     @Comment("매장 대표 이미지 SEQ")
     @Column(name = "store_img_seq", length = 20, nullable = false)
@@ -87,11 +77,9 @@ public class DineReserveStoreInfo extends DineReserveBase {
     @Column(name = "store_description", columnDefinition = "TEXT")
     private String storeDescription;
 
-    public static DineReserveStoreInfo create(StoreInfoRegist storeInfoRegist, DineReserveStoreCategory dineReserveStoreCategory, DineReserveFile storeImg, DineReserveFile storeMap) {
+    public static DineReserveStoreInfo create(StoreInfoRegist storeInfoRegist, DineReserveFile storeImg, DineReserveFile storeMap) {
         DineReserveStoreInfo dineReserveStoreInfo = new DineReserveStoreInfo();
         dineReserveStoreInfo.setStoreUUID(UUID.randomUUID());
-        dineReserveStoreInfo.setCategorySeq(dineReserveStoreCategory.getSeq());
-        dineReserveStoreInfo.setCategoryUUID(dineReserveStoreCategory.getCategoryUUID());
         dineReserveStoreInfo.setStoreImgSeq(storeImg == null ? EMPTY_SEQ : storeImg.getSeq());
         dineReserveStoreInfo.setStoreImgUUID(storeImg == null ? EMPTY_UUID : storeImg.getFileUUID());
         dineReserveStoreInfo.setStoreMapSeq(storeMap == null ? EMPTY_SEQ : storeMap.getSeq());

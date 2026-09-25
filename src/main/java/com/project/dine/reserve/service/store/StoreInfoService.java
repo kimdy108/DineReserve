@@ -2,11 +2,13 @@ package com.project.dine.reserve.service.store;
 
 import com.project.dine.reserve.config.exception.DineReserveException;
 import com.project.dine.reserve.domain.store.DineReserveStoreCategory;
+import com.project.dine.reserve.domain.store.DineReserveStoreCategoryInfo;
 import com.project.dine.reserve.domain.store.DineReserveStoreInfo;
 import com.project.dine.reserve.domain.system.DineReserveFile;
 import com.project.dine.reserve.dto.constant.error.StoreErrorCode;
 import com.project.dine.reserve.dto.constant.error.SystemErrorCode;
 import com.project.dine.reserve.dto.store.info.*;
+import com.project.dine.reserve.repository.store.DineReserveStoreCategoryInfoRepository;
 import com.project.dine.reserve.repository.store.DineReserveStoreCategoryRepository;
 import com.project.dine.reserve.repository.store.DineReserveStoreInfoRepository;
 import com.project.dine.reserve.repository.system.DineReserveFileRepository;
@@ -19,19 +21,20 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class StoreInfoService {
     private final FileService fileService;
     private final StoreInfoScheduleService storeInfoScheduleService;
+    private final StoreCategoryInfoService storeCategoryInfoService;
 
     private final DineReserveFileRepository dineReserveFileRepository;
 
     private final DineReserveStoreCategoryRepository dineReserveStoreCategoryRepository;
     private final DineReserveStoreInfoRepository dineReserveStoreInfoRepository;
+    private final DineReserveStoreCategoryInfoRepository dineReserveStoreCategoryInfoRepository;
 
     @Transactional
     public void storeInfoRegist(StoreInfoRegist storeInfoRegist) {
@@ -39,14 +42,14 @@ public class StoreInfoService {
             throw new DineReserveException(StoreErrorCode.EXIST_STORE_INFO);
         });
 
-        DineReserveStoreCategory dineReserveStoreCategory = dineReserveStoreCategoryRepository.findByCategoryUUID(storeInfoRegist.getCategoryUUID())
-                .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_CATEGORY));
-
         DineReserveFile storeImg = fileService.insertFile(storeInfoRegist.getStoreImg(), "store", "img");
         DineReserveFile storeMap = fileService.insertFile(storeInfoRegist.getStoreMap(), "store", "map");
 
-        DineReserveStoreInfo dineReserveStoreInfo = DineReserveStoreInfo.create(storeInfoRegist, dineReserveStoreCategory, storeImg, storeMap);
+        DineReserveStoreInfo dineReserveStoreInfo = DineReserveStoreInfo.create(storeInfoRegist, storeImg, storeMap);
         dineReserveStoreInfoRepository.save(dineReserveStoreInfo);
+
+        // 매장 카테고리, 정보 매핑 등록
+        storeCategoryInfoService.storeCategoryInfoRegist(dineReserveStoreInfo, storeInfoRegist.getCategoryUUIDList());
     }
 
     @Transactional
@@ -62,6 +65,9 @@ public class StoreInfoService {
                 fileService.updateFile(dineReserveStoreInfo.getStoreMapUUID(), storeInfoUpdate.getStoreMap(), "store", "map");
 
         dineReserveStoreInfo.update(storeInfoUpdate, storeImg, storeMap);
+
+        // 매장 카테고리, 정보 매핑 수정
+        storeCategoryInfoService.storeCategoryInfoUpdate(dineReserveStoreInfo, storeInfoUpdate.getCategoryUUIDList());
     }
 
     @Transactional
@@ -73,6 +79,9 @@ public class StoreInfoService {
         fileService.deleteFile(dineReserveStoreInfo.getStoreMapUUID());
 
         dineReserveStoreInfoRepository.delete(dineReserveStoreInfo);
+
+        // 매장 카테고리, 정보 매핑 삭제
+        storeCategoryInfoService.storeCategoryInfoDelete(storeUUID);
 
         // 매장 스케줄 삭제
         storeInfoScheduleService.storeInfoScheduleDelete(storeUUID);
@@ -106,9 +115,6 @@ public class StoreInfoService {
         DineReserveStoreInfo dineReserveStoreInfo = dineReserveStoreInfoRepository.findByStoreUUID(storeUUID)
                 .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_INFO));
 
-        DineReserveStoreCategory dineReserveStoreCategory = dineReserveStoreCategoryRepository.findByCategoryUUID(dineReserveStoreInfo.getCategoryUUID())
-                .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_CATEGORY));
-
-        return StoreInfoInfo.create(dineReserveStoreInfo, dineReserveStoreCategory);
+        return StoreInfoInfo.create(dineReserveStoreInfo, storeCategoryInfoService.storeCategoryInfoCategoryUUIDList(dineReserveStoreInfo.getStoreUUID()));
     }
 }
