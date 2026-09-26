@@ -59,4 +59,13 @@ public class BaseResponse<T> {
                 .message(message)
                 .build();
     }
+
+/////////////// other exception response ///////////////
+
+    public static <T> BaseResponse<T> exceptionError(String message) {
+        return BaseResponse.<T>builder()
+                .resultCode(ResultCode.INTERNAL_SERVER_ERROR.name())
+                .message(message)
+                .build();
+    }
 }

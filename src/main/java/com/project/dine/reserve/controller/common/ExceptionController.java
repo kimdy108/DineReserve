@@ -18,8 +18,14 @@ public class ExceptionController {
         loggerService.writeLogger("error", "Runtime Error : " + e.getMessage());
         e.printStackTrace();
 
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(BaseResponse.error(e.getMessage()));
+        return ResponseEntity.badRequest().body(BaseResponse.error(e.getMessage()));
+    }
+
+    @ExceptionHandler({Exception.class})
+    public ResponseEntity<BaseResponse<String>> handleException(Exception e) {
+        loggerService.writeLogger("error", "Error : " + e.getMessage());
+        e.printStackTrace();
+
+        return ResponseEntity.internalServerError().body(BaseResponse.exceptionError(e.getMessage()));
     }
 }

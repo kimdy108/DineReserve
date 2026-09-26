@@ -10,5 +10,6 @@ public enum ResultCode {
     ERROR,
     BAD_REQUEST,
     UNAUTHORIZED,
-    TOKEN_EXPIRED
+    TOKEN_EXPIRED,
+    INTERNAL_SERVER_ERROR
 }
