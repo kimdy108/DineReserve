@@ -1,15 +1,10 @@
 package com.project.dine.reserve.service.store;
 
 import com.project.dine.reserve.config.exception.DineReserveException;
-import com.project.dine.reserve.domain.store.DineReserveStoreCategory;
-import com.project.dine.reserve.domain.store.DineReserveStoreCategoryInfo;
 import com.project.dine.reserve.domain.store.DineReserveStoreInfo;
 import com.project.dine.reserve.domain.system.DineReserveFile;
 import com.project.dine.reserve.dto.constant.error.StoreErrorCode;
-import com.project.dine.reserve.dto.constant.error.SystemErrorCode;
 import com.project.dine.reserve.dto.store.info.*;
-import com.project.dine.reserve.repository.store.DineReserveStoreCategoryInfoRepository;
-import com.project.dine.reserve.repository.store.DineReserveStoreCategoryRepository;
 import com.project.dine.reserve.repository.store.DineReserveStoreInfoRepository;
 import com.project.dine.reserve.repository.system.DineReserveFileRepository;
 import com.project.dine.reserve.service.component.FileService;
@@ -27,14 +22,13 @@ import java.util.*;
 @RequiredArgsConstructor
 public class StoreInfoService {
     private final FileService fileService;
+    private final StoreInfoDetailService storeInfoDetailService;
     private final StoreInfoScheduleService storeInfoScheduleService;
     private final StoreCategoryInfoService storeCategoryInfoService;
 
     private final DineReserveFileRepository dineReserveFileRepository;
 
-    private final DineReserveStoreCategoryRepository dineReserveStoreCategoryRepository;
     private final DineReserveStoreInfoRepository dineReserveStoreInfoRepository;
-    private final DineReserveStoreCategoryInfoRepository dineReserveStoreCategoryInfoRepository;
 
     @Transactional
     public void storeInfoRegist(StoreInfoRegist storeInfoRegist) {
@@ -79,6 +73,9 @@ public class StoreInfoService {
         fileService.deleteFile(dineReserveStoreInfo.getStoreMapUUID());
 
         dineReserveStoreInfoRepository.delete(dineReserveStoreInfo);
+
+        // 매장 상세 삭제
+        storeInfoDetailService.storeInfoDetailDelete(storeUUID);
 
         // 매장 카테고리, 정보 매핑 삭제
         storeCategoryInfoService.storeCategoryInfoDelete(storeUUID);
