@@ -12,6 +12,8 @@ import java.util.UUID;
 public interface DineReserveStoreCategoryInfoRepository extends JpaRepository<DineReserveStoreCategoryInfo, Long> {
     List<DineReserveStoreCategoryInfo> findAllByStoreUUID(UUID storeUUID);
 
+    void deleteAllByStoreUUID(UUID storeUUID);
+
     @Query(value = "select count(seq) from DineReserveStoreCategoryInfo where categoryUUID = :categoryUUID")
     int countByCategoryUUID(UUID categoryUUID);
 }

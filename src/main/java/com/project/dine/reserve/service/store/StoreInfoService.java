@@ -25,6 +25,7 @@ public class StoreInfoService {
     private final StoreInfoDetailService storeInfoDetailService;
     private final StoreInfoScheduleService storeInfoScheduleService;
     private final StoreCategoryInfoService storeCategoryInfoService;
+    private final StoreHolidayService storeHolidayService;
 
     private final DineReserveFileRepository dineReserveFileRepository;
 
@@ -82,6 +83,9 @@ public class StoreInfoService {
 
         // 매장 스케줄 삭제
         storeInfoScheduleService.storeInfoScheduleDelete(storeUUID);
+
+        // 매장 휴일 삭제
+        storeHolidayService.storeHolidayDeleteAll(storeUUID);
     }
 
     @Transactional

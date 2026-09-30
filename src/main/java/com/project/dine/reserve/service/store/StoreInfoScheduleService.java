@@ -51,7 +51,7 @@ public class StoreInfoScheduleService {
 
     @Transactional
     public void storeInfoScheduleDelete(UUID storeUUID) {
-        dineReserveStoreInfoScheduleRepository.deleteByStoreUUID(storeUUID);
+        dineReserveStoreInfoScheduleRepository.deleteAllByStoreUUID(storeUUID);
     }
 
     public List<StoreInfoSchedule> storeInfoScheduleListAll(UUID storeUUID) {

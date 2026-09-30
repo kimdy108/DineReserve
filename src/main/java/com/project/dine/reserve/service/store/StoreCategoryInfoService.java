@@ -56,8 +56,7 @@ public class StoreCategoryInfoService {
 
     @Transactional
     public void storeCategoryInfoDelete(UUID storeUUID) {
-        List<DineReserveStoreCategoryInfo> dineReserveStoreCategoryInfos = dineReserveStoreCategoryInfoRepository.findAllByStoreUUID(storeUUID);
-        dineReserveStoreCategoryInfoRepository.deleteAll(dineReserveStoreCategoryInfos);
+        dineReserveStoreCategoryInfoRepository.deleteAllByStoreUUID(storeUUID);
     }
 
     public List<UUID> storeCategoryInfoCategoryUUIDList(UUID storeUUID) {

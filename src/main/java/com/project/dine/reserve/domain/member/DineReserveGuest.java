@@ -33,7 +33,7 @@ public class DineReserveGuest extends DineReserveBase {
     private String guestPhone;
 
     @Comment("비회원 비밀번호")
-    @Column(name = "guest_password", length = 6, nullable = false)
+    @Column(name = "guest_password", length = 4, nullable = false)
     private String guestPassword;
 
     @Comment("비회원 이름")
