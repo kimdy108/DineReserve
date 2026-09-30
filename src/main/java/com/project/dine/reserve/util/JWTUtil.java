@@ -1,5 +1,6 @@
 package com.project.dine.reserve.util;
 
+import com.project.dine.reserve.dto.auth.member.MemberRefresh;
 import com.project.dine.reserve.dto.constant.admin.AdminRole;
 import com.project.dine.reserve.dto.constant.member.MemberRole;
 import io.jsonwebtoken.Jwts;
@@ -41,10 +42,10 @@ public class JWTUtil {
                 .compact();
     }
 
-    public String createMemberToken(UUID userUUID) {
+    public String createMemberToken(UUID userUUID, MemberRole memberRole) {
         return Jwts.builder()
                 .claim("userUUID", userUUID)
-                .claim("role", MemberRole.MEMBER)
+                .claim("role", memberRole)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(secretKey)

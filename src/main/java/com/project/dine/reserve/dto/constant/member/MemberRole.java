@@ -6,7 +6,8 @@ import lombok.experimental.Accessors;
 @Getter
 @Accessors(fluent = true)
 public enum MemberRole {
-    MEMBER("사용자", "ROLE_MEMBER");
+    MEMBER("사용자", "ROLE_MEMBER"),
+    GUEST("비회원", "ROLE_GUEST");
 
     private final String title;
     private final String value;

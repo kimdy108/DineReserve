@@ -5,6 +5,7 @@ import com.project.dine.reserve.domain.member.DineReserveMember;
 import com.project.dine.reserve.dto.auth.member.*;
 import com.project.dine.reserve.dto.common.RedisLoginSession;
 import com.project.dine.reserve.dto.constant.error.AuthErrorCode;
+import com.project.dine.reserve.dto.constant.member.MemberRole;
 import com.project.dine.reserve.dto.constant.member.MemberStatusType;
 import com.project.dine.reserve.repository.member.DineReserveMemberRepository;
 import com.project.dine.reserve.service.component.RedisService;
@@ -38,7 +39,7 @@ public class AuthenticationMemberService {
         if (!passwordEncoder.matches(memberLogin.getMemberPassword(), dineReserveMember.getMemberPassword())) throw new DineReserveException(AuthErrorCode.AUTH_FAIL);
         if (!MemberStatusType.ACTIVE.equals(dineReserveMember.getMemberStatus())) throw new DineReserveException(AuthErrorCode.AUTH_FAIL);
 
-        String accessToken = jwtUtil.createMemberToken(dineReserveMember.getMemberUUID());
+        String accessToken = jwtUtil.createMemberToken(dineReserveMember.getMemberUUID(), MemberRole.MEMBER);
         String refreshToken = jwtUtil.createRefreshToken(dineReserveMember.getMemberID());
         UUID sessionUUID = UUID.randomUUID();
         MemberLoginResult loginResult = MemberLoginResult.create(dineReserveMember.getMemberUUID(),sessionUUID);
@@ -61,7 +62,7 @@ public class AuthenticationMemberService {
         DineReserveMember dineReserveMember = dineReserveMemberRepository.findByMemberID(memberRefresh.getMemberID())
                 .orElseThrow(() -> new DineReserveException(AuthErrorCode.REFRESH_AUTH_FAIL));
 
-        String accessToken = jwtUtil.createMemberToken(dineReserveMember.getMemberUUID());
+        String accessToken = jwtUtil.createMemberToken(dineReserveMember.getMemberUUID(), MemberRole.MEMBER);
         String refreshToken = jwtUtil.createRefreshToken(dineReserveMember.getMemberID());
 
         // 로그인 리스트 expire timestamp 수정
