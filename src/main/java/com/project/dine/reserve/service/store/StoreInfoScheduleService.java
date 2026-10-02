@@ -61,6 +61,11 @@ public class StoreInfoScheduleService {
         return storeInfoScheduleList;
     }
 
+    public DineReserveStoreInfoSchedule getStoreInfoSchedule(UUID storeUUID, DayOfWeek dayOfWeek) {
+        return dineReserveStoreInfoScheduleRepository.findByStoreUUIDAndDayOfWeek(storeUUID, dayOfWeek)
+                .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_INFO_SCHEDULE));
+    }
+
     private List<StoreInfoSchedule> getDefaultScheduleList() {
         return Arrays.stream(DayOfWeek.values())
                 .map(StoreInfoSchedule::createForDefault)

@@ -32,17 +32,13 @@ public class StoreInfoDetailService {
 
     @Transactional
     public void storeInfoDetailUpdate(StoreInfoDetailUpdate storeInfoDetailUpdate) {
-        DineReserveStoreInfoDetail dineReserveStoreInfoDetail = dineReserveStoreInfoDetailRepository.findByStoreUUID(storeInfoDetailUpdate.getStoreUUID())
-                .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_INFO_DETAIL));
-
+        DineReserveStoreInfoDetail dineReserveStoreInfoDetail = getStoreInfoDetail(storeInfoDetailUpdate.getStoreUUID());
         dineReserveStoreInfoDetail.update(storeInfoDetailUpdate);
     }
 
     @Transactional
     public void storeInfoDetailDelete(UUID storeUUID) {
-        DineReserveStoreInfoDetail dineReserveStoreInfoDetail = dineReserveStoreInfoDetailRepository.findByStoreUUID(storeUUID)
-                .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_INFO_DETAIL));
-
+        DineReserveStoreInfoDetail dineReserveStoreInfoDetail = getStoreInfoDetail(storeUUID);
         dineReserveStoreInfoDetailRepository.delete(dineReserveStoreInfoDetail);
     }
 
@@ -51,5 +47,10 @@ public class StoreInfoDetailService {
                 .orElse(null);
 
         return dineReserveStoreInfoDetail == null ? StoreInfoDetailInfo.defaultCreate() : StoreInfoDetailInfo.create(dineReserveStoreInfoDetail);
+    }
+
+    public DineReserveStoreInfoDetail getStoreInfoDetail(UUID storeUUID) {
+        return dineReserveStoreInfoDetailRepository.findByStoreUUID(storeUUID)
+                .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_INFO_DETAIL));
     }
 }

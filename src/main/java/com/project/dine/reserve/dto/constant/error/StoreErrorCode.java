@@ -13,6 +13,7 @@ public enum StoreErrorCode implements ErrorCode {
     NO_STORE_INFO("존재하지 않는 매장입니다."),
     EXIST_STORE_INFO("이미 존재하는 매장입니다."),
     NO_STORE_INFO_DETAIL("존재하지 않는 매장 상세 정보입니다."),
+    NO_STORE_INFO_SCHEDULE("존재하지 않는 매장 스케줄 정보입니다."),
     NO_STORE_HOLIDAY("존재하지 않는 휴일입니다.");
 
     private final String message;
