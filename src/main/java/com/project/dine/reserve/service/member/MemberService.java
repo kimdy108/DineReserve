@@ -36,24 +36,19 @@ public class MemberService {
 
     @Transactional
     public void memberUpdate(MemberUpdate memberUpdate) {
-        DineReserveMember dineReserveMember = dineReserveMemberRepository.findByMemberUUID(memberUpdate.getMemberUUID())
-                .orElseThrow(() -> new DineReserveException(MemberErrorCode.NO_MEMBER));
-
+        DineReserveMember dineReserveMember = getMember(memberUpdate.getMemberUUID());
         dineReserveMember.update(memberUpdate);
     }
 
     @Transactional
     public void memberDelete(UUID memberUUID) {
-        DineReserveMember dineReserveMember = dineReserveMemberRepository.findByMemberUUID(memberUUID)
-                .orElseThrow(() -> new DineReserveException(MemberErrorCode.NO_MEMBER));
-
+        DineReserveMember dineReserveMember = getMember(memberUUID);
         dineReserveMember.updateUseFlag(false);
     }
 
     @Transactional
     public void memberUpdatePassword(MemberUpdatePassword memberUpdatePassword) {
-        DineReserveMember dineReserveMember = dineReserveMemberRepository.findByMemberUUID(memberUpdatePassword.getMemberUUID())
-                .orElseThrow(() -> new DineReserveException(MemberErrorCode.NO_MEMBER));
+        DineReserveMember dineReserveMember = getMember(memberUpdatePassword.getMemberUUID());
 
         if (!passwordEncoder.matches(memberUpdatePassword.getOriginPassword(), dineReserveMember.getMemberPassword())) throw new DineReserveException(AuthErrorCode.NOT_MATCH_PASSWORD);
 
@@ -62,9 +57,7 @@ public class MemberService {
 
     @Transactional
     public void memberUpdateStatus(MemberUpdateStatus memberUpdateStatus) {
-        DineReserveMember dineReserveMember = dineReserveMemberRepository.findByMemberUUID(memberUpdateStatus.getMemberUUID())
-                .orElseThrow(() -> new DineReserveException(MemberErrorCode.NO_MEMBER));
-
+        DineReserveMember dineReserveMember = getMember(memberUpdateStatus.getMemberUUID());
         dineReserveMember.updateStatus(memberUpdateStatus.getMemberStatus());
     }
 
@@ -79,9 +72,12 @@ public class MemberService {
     }
 
     public MemberInfo memberInfo(UUID memberUUID) {
-        DineReserveMember dineReserveMember = dineReserveMemberRepository.findByMemberUUID(memberUUID)
-                .orElseThrow(() -> new DineReserveException(MemberErrorCode.NO_MEMBER));
-
+        DineReserveMember dineReserveMember = getMember(memberUUID);
         return MemberInfo.create(dineReserveMember);
+    }
+
+    public DineReserveMember getMember(UUID memberUUID) {
+        return dineReserveMemberRepository.findByMemberUUID(memberUUID)
+                .orElseThrow(() -> new DineReserveException(MemberErrorCode.NO_MEMBER));
     }
 }

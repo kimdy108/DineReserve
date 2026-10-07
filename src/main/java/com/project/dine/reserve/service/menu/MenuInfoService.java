@@ -27,15 +27,15 @@ import static com.project.dine.reserve.util.Common.EMPTY_UUID;
 public class MenuInfoService {
     private final FileService fileService;
 
+    private final MenuCategoryService menuCategoryService;
+
     private final DineReserveFileRepository dineReserveFileRepository;
 
-    private final DineReserveMenuCategoryRepository dineReserveMenuCategoryRepository;
     private final DineReserveMenuInfoRepository dineReserveMenuInfoRepository;
 
     @Transactional
     public void menuInfoRegist(MenuInfoRegist menuInfoRegist) {
-        DineReserveMenuCategory dineReserveMenuCategory = dineReserveMenuCategoryRepository.findByMenuCategoryUUID(menuInfoRegist.getMenuCategoryUUID())
-                .orElseThrow(() -> new DineReserveException(MenuErrorCode.NO_MENU_CATEGORY));
+        DineReserveMenuCategory dineReserveMenuCategory = menuCategoryService.getMenuCategory(menuInfoRegist.getMenuCategoryUUID());
 
         DineReserveFile menuInfoImg = fileService.insertFile(menuInfoRegist.getMenuInfoImg(), "menu", "img");
 
@@ -47,8 +47,7 @@ public class MenuInfoService {
 
     @Transactional
     public void menuInfoUpdate(MenuInfoUpdate menuInfoUpdate) {
-        DineReserveMenuInfo dineReserveMenuInfo = dineReserveMenuInfoRepository.findByMenuInfoUUID(menuInfoUpdate.getMenuInfoUUID())
-                .orElseThrow(() -> new DineReserveException(MenuErrorCode.NO_MENU_INFO));
+        DineReserveMenuInfo dineReserveMenuInfo = getMenuInfo(menuInfoUpdate.getMenuInfoUUID());
 
         DineReserveFile menuInfoImg = menuInfoUpdate.getMenuInfoImg() == null ?
                 dineReserveFileRepository.findByFileUUID(dineReserveMenuInfo.getMenuInfoImgUUID()).orElse(null) :
@@ -59,8 +58,7 @@ public class MenuInfoService {
 
     @Transactional
     public void menuInfoDelete(UUID menuInfoUUID) {
-        DineReserveMenuInfo dineReserveMenuInfo = dineReserveMenuInfoRepository.findByMenuInfoUUID(menuInfoUUID)
-                .orElseThrow(() -> new DineReserveException(MenuErrorCode.NO_MENU_INFO));
+        DineReserveMenuInfo dineReserveMenuInfo = getMenuInfo(menuInfoUUID);
 
         fileService.deleteFile(dineReserveMenuInfo.getMenuInfoImgUUID());
 
@@ -92,12 +90,14 @@ public class MenuInfoService {
     }
 
     public MenuInfoInfo menuInfoInfo(UUID menuInfoUUID) {
-        DineReserveMenuInfo dineReserveMenuInfo = dineReserveMenuInfoRepository.findByMenuInfoUUID(menuInfoUUID)
-                .orElseThrow(() -> new DineReserveException(MenuErrorCode.NO_MENU_INFO));
-
-        DineReserveMenuCategory dineReserveMenuCategory = dineReserveMenuCategoryRepository.findByMenuCategoryUUID(dineReserveMenuInfo.getMenuCategoryUUID())
-                .orElseThrow(() -> new DineReserveException(MenuErrorCode.NO_MENU_CATEGORY));
+        DineReserveMenuInfo dineReserveMenuInfo = getMenuInfo(menuInfoUUID);
+        DineReserveMenuCategory dineReserveMenuCategory = menuCategoryService.getMenuCategory(dineReserveMenuInfo.getMenuCategoryUUID());
 
         return MenuInfoInfo.create(dineReserveMenuInfo, dineReserveMenuCategory);
+    }
+
+    public DineReserveMenuInfo getMenuInfo(UUID menuInfoUUID) {
+        return dineReserveMenuInfoRepository.findByMenuInfoUUID(menuInfoUUID)
+                .orElseThrow(() -> new DineReserveException(MenuErrorCode.NO_MENU_INFO));
     }
 }

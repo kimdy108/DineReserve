@@ -18,7 +18,8 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class StoreCategoryInfoService {
-    private final DineReserveStoreCategoryRepository dineReserveStoreCategoryRepository;
+    private final StoreCategoryService storeCategoryService;
+
     private final DineReserveStoreCategoryInfoRepository dineReserveStoreCategoryInfoRepository;
 
     @Transactional
@@ -26,8 +27,7 @@ public class StoreCategoryInfoService {
         List<DineReserveStoreCategoryInfo> dineReserveStoreCategoryInfos = new ArrayList<>();
 
         for (UUID categoryUUID : categoryUUIDList) {
-            DineReserveStoreCategory dineReserveStoreCategory = dineReserveStoreCategoryRepository.findByCategoryUUID(categoryUUID)
-                    .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_CATEGORY));
+            DineReserveStoreCategory dineReserveStoreCategory = storeCategoryService.getStoreCategory(categoryUUID);
             dineReserveStoreCategoryInfos.add(DineReserveStoreCategoryInfo.create(dineReserveStoreCategory, dineReserveStoreInfo));
         }
 
@@ -46,8 +46,7 @@ public class StoreCategoryInfoService {
         }
 
         for (UUID categoryUUID : requestedCategoryUUIDs) {
-            DineReserveStoreCategory dineReserveStoreCategory = dineReserveStoreCategoryRepository.findByCategoryUUID(categoryUUID)
-                    .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_CATEGORY));
+            DineReserveStoreCategory dineReserveStoreCategory = storeCategoryService.getStoreCategory(categoryUUID);
             newDineReserveStoreCategoryInfos.add(DineReserveStoreCategoryInfo.create(dineReserveStoreCategory, dineReserveStoreInfo));
         }
 

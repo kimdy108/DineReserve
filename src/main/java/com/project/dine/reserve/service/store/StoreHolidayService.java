@@ -35,17 +35,13 @@ public class StoreHolidayService {
 
     @Transactional
     public void storeHolidayUpdate(StoreHolidayUpdate storeHolidayUpdate) {
-        DineReserveStoreHoliday dineReserveStoreHoliday = dineReserveStoreHolidayRepository.findByHolidayUUID(storeHolidayUpdate.getHolidayUUID())
-                .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_HOLIDAY));
-
+        DineReserveStoreHoliday dineReserveStoreHoliday = getStoreHoliday(storeHolidayUpdate.getHolidayUUID());
         dineReserveStoreHoliday.update(storeHolidayUpdate);
     }
 
     @Transactional
     public void storeHolidayDelete(UUID holidayUUID) {
-        DineReserveStoreHoliday dineReserveStoreHoliday = dineReserveStoreHolidayRepository.findByHolidayUUID(holidayUUID)
-                .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_HOLIDAY));
-
+        DineReserveStoreHoliday dineReserveStoreHoliday = getStoreHoliday(holidayUUID);
         dineReserveStoreHolidayRepository.delete(dineReserveStoreHoliday);
     }
 
@@ -59,9 +55,12 @@ public class StoreHolidayService {
     }
 
     public StoreHolidayInfo storeHolidayInfo(UUID holidayUUID) {
-        DineReserveStoreHoliday dineReserveStoreHoliday = dineReserveStoreHolidayRepository.findByHolidayUUID(holidayUUID)
-                .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_HOLIDAY));
-
+        DineReserveStoreHoliday dineReserveStoreHoliday = getStoreHoliday(holidayUUID);
         return StoreHolidayInfo.create(dineReserveStoreHoliday);
+    }
+
+    private DineReserveStoreHoliday getStoreHoliday(UUID holidayUUID) {
+        return dineReserveStoreHolidayRepository.findByHolidayUUID(holidayUUID)
+                .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_HOLIDAY));
     }
 }

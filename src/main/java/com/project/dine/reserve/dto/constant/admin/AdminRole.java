@@ -17,4 +17,12 @@ public enum AdminRole {
         this.title = title;
         this.value = value;
     }
+
+    public static boolean from(String name) {
+        for (AdminRole adminRole : AdminRole.values()) {
+            if (adminRole.name().equals(name)) return true;
+        }
+
+        return false;
+    }
 }

@@ -3,6 +3,7 @@ package com.project.dine.reserve.util;
 import com.project.dine.reserve.dto.auth.member.MemberRefresh;
 import com.project.dine.reserve.dto.constant.admin.AdminRole;
 import com.project.dine.reserve.dto.constant.member.MemberRole;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -32,6 +33,16 @@ public class JWTUtil {
         }
     }
 
+    public UUID getUserUUID(String token) {
+        Claims claims = parseJwtToken(token);
+        return UUID.fromString(claims.get("userUUID", String.class));
+    }
+
+    public boolean isAdmin(String token) {
+        Claims claims = parseJwtToken(token);
+        return AdminRole.from(claims.get("role", String.class));
+    }
+
     public String createAdminToken(UUID userUUID, AdminRole adminRole) {
         return Jwts.builder()
                 .claim("userUUID", userUUID)
@@ -59,5 +70,13 @@ public class JWTUtil {
                 .expiration(new Date(System.currentTimeMillis() + expirationTime * 24 * 7))
                 .signWith(secretKey)
                 .compact();
+    }
+
+    private Claims parseJwtToken(String token) {
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 }

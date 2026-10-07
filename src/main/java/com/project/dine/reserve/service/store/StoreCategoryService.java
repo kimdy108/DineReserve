@@ -35,16 +35,13 @@ public class StoreCategoryService {
 
     @Transactional
     public void storeCategoryUpdate(StoreCategoryUpdate storeCategoryUpdate) {
-        DineReserveStoreCategory dineReserveStoreCategory = dineReserveStoreCategoryRepository.findByCategoryUUID(storeCategoryUpdate.getCategoryUUID())
-                .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_CATEGORY));
-
+        DineReserveStoreCategory dineReserveStoreCategory = getStoreCategory(storeCategoryUpdate.getCategoryUUID());
         dineReserveStoreCategory.update(storeCategoryUpdate);
     }
 
     @Transactional
     public void storeCategoryDelete(UUID categoryUUID) {
-        DineReserveStoreCategory dineReserveStoreCategory = dineReserveStoreCategoryRepository.findByCategoryUUID(categoryUUID)
-                .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_CATEGORY));
+        DineReserveStoreCategory dineReserveStoreCategory = getStoreCategory(categoryUUID);
 
         int count = dineReserveStoreCategoryInfoRepository.countByCategoryUUID(dineReserveStoreCategory.getCategoryUUID());
         if (count > 0) throw new DineReserveException(StoreErrorCode.USE_CATEGORY);
@@ -54,9 +51,7 @@ public class StoreCategoryService {
 
     @Transactional
     public void storeCategoryActive(StoreCategoryActive storeCategoryActive) {
-        DineReserveStoreCategory dineReserveStoreCategory = dineReserveStoreCategoryRepository.findByCategoryUUID(storeCategoryActive.getCategoryUUID())
-                .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_CATEGORY));
-
+        DineReserveStoreCategory dineReserveStoreCategory = getStoreCategory(storeCategoryActive.getCategoryUUID());
         dineReserveStoreCategory.updateUseFlag(storeCategoryActive.isUseFlag());
     }
 
@@ -74,9 +69,12 @@ public class StoreCategoryService {
     }
 
     public StoreCategoryInfo storeCategoryInfo(UUID categoryUUID) {
-        DineReserveStoreCategory dineReserveStoreCategory = dineReserveStoreCategoryRepository.findByCategoryUUID(categoryUUID)
-                .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_CATEGORY));
-
+        DineReserveStoreCategory dineReserveStoreCategory = getStoreCategory(categoryUUID);
         return StoreCategoryInfo.create(dineReserveStoreCategory);
+    }
+
+    public DineReserveStoreCategory getStoreCategory(UUID categoryUUID) {
+        return dineReserveStoreCategoryRepository.findByCategoryUUID(categoryUUID)
+                .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_CATEGORY));
     }
 }

@@ -47,24 +47,19 @@ public class AdminService {
 
     @Transactional
     public void adminUpdate(AdminUpdate adminUpdate) {
-        DineReserveAdmin dineReserveAdmin = dineReserveAdminRepository.findByAdminUUID(adminUpdate.getAdminUUID())
-                .orElseThrow(() -> new DineReserveException(AdminErrorCode.NO_ADMIN));
-
+        DineReserveAdmin dineReserveAdmin = getAdmin(adminUpdate.getAdminUUID());
         dineReserveAdmin.update(adminUpdate);
     }
 
     @Transactional
     public void adminDelete(UUID adminUUID) {
-        DineReserveAdmin dineReserveAdmin = dineReserveAdminRepository.findByAdminUUID(adminUUID)
-                .orElseThrow(() -> new DineReserveException(AdminErrorCode.NO_ADMIN));
-
+        DineReserveAdmin dineReserveAdmin = getAdmin(adminUUID);
         dineReserveAdmin.updateUseFlag(false);
     }
 
     @Transactional
     public void adminUpdatePassword(AdminUpdatePassword adminUpdatePassword) {
-        DineReserveAdmin dineReserveAdmin = dineReserveAdminRepository.findByAdminUUID(adminUpdatePassword.getAdminUUID())
-                .orElseThrow(() -> new DineReserveException(AdminErrorCode.NO_ADMIN));
+        DineReserveAdmin dineReserveAdmin = getAdmin(adminUpdatePassword.getAdminUUID());
 
         if (!passwordEncoder.matches(adminUpdatePassword.getOldPassword(), dineReserveAdmin.getAdminPassword())) throw new DineReserveException(AuthErrorCode.NOT_MATCH_PASSWORD);
 
@@ -82,9 +77,12 @@ public class AdminService {
     }
 
     public AdminInfo adminInfo(UUID adminUUID) {
-        DineReserveAdmin dineReserveAdmin = dineReserveAdminRepository.findByAdminUUID(adminUUID)
-                .orElseThrow(() -> new DineReserveException(AdminErrorCode.NO_ADMIN));
-
+        DineReserveAdmin dineReserveAdmin = getAdmin(adminUUID);
         return AdminInfo.create(dineReserveAdmin);
+    }
+
+    public DineReserveAdmin getAdmin(UUID adminUUID) {
+        return dineReserveAdminRepository.findByAdminUUID(adminUUID)
+                .orElseThrow(() -> new DineReserveException(AdminErrorCode.NO_ADMIN));
     }
 }

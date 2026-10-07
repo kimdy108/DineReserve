@@ -49,8 +49,7 @@ public class StoreInfoService {
 
     @Transactional
     public void storeInfoUpdate(StoreInfoUpdate storeInfoUpdate) {
-        DineReserveStoreInfo dineReserveStoreInfo = dineReserveStoreInfoRepository.findByStoreUUID(storeInfoUpdate.getStoreUUID())
-                .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_INFO));
+        DineReserveStoreInfo dineReserveStoreInfo = getStoreInfo(storeInfoUpdate.getStoreUUID());
 
         DineReserveFile storeImg = storeInfoUpdate.getStoreImg() == null ?
                 dineReserveFileRepository.findByFileUUID(dineReserveStoreInfo.getStoreImgUUID()).orElse(null) :
@@ -67,8 +66,7 @@ public class StoreInfoService {
 
     @Transactional
     public void storeInfoDelete(UUID storeUUID) {
-        DineReserveStoreInfo dineReserveStoreInfo = dineReserveStoreInfoRepository.findByStoreUUID(storeUUID)
-                .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_INFO));
+        DineReserveStoreInfo dineReserveStoreInfo = getStoreInfo(storeUUID);
 
         fileService.deleteFile(dineReserveStoreInfo.getStoreImgUUID());
         fileService.deleteFile(dineReserveStoreInfo.getStoreMapUUID());
@@ -90,9 +88,7 @@ public class StoreInfoService {
 
     @Transactional
     public void storeInfoActive(StoreInfoActive storeInfoActive) {
-        DineReserveStoreInfo dineReserveStoreInfo = dineReserveStoreInfoRepository.findByStoreUUID(storeInfoActive.getStoreUUID())
-                .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_INFO));
-
+        DineReserveStoreInfo dineReserveStoreInfo = getStoreInfo(storeInfoActive.getStoreUUID());
         dineReserveStoreInfo.updateUseFlag(storeInfoActive.isUseFlag());
     }
 
@@ -113,9 +109,12 @@ public class StoreInfoService {
     }
 
     public StoreInfoInfo storeInfoInfo(UUID storeUUID) {
-        DineReserveStoreInfo dineReserveStoreInfo = dineReserveStoreInfoRepository.findByStoreUUID(storeUUID)
-                .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_INFO));
-
+        DineReserveStoreInfo dineReserveStoreInfo = getStoreInfo(storeUUID);
         return StoreInfoInfo.create(dineReserveStoreInfo, storeCategoryInfoService.storeCategoryInfoCategoryUUIDList(dineReserveStoreInfo.getStoreUUID()));
+    }
+
+    public DineReserveStoreInfo getStoreInfo(UUID storeUUID) {
+        return dineReserveStoreInfoRepository.findByStoreUUID(storeUUID)
+                .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_INFO));
     }
 }

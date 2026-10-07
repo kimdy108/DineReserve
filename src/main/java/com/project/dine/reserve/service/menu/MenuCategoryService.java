@@ -9,6 +9,7 @@ import com.project.dine.reserve.dto.menu.category.*;
 import com.project.dine.reserve.repository.menu.DineReserveMenuCategoryRepository;
 import com.project.dine.reserve.repository.menu.DineReserveMenuInfoRepository;
 import com.project.dine.reserve.repository.store.DineReserveStoreInfoRepository;
+import com.project.dine.reserve.service.store.StoreInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,14 +23,14 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class MenuCategoryService {
-    private final DineReserveStoreInfoRepository dineReserveStoreInfoRepository;
+    private final StoreInfoService storeInfoService;
+
     private final DineReserveMenuCategoryRepository dineReserveMenuCategoryRepository;
     private final DineReserveMenuInfoRepository dineReserveMenuInfoRepository;
 
     @Transactional
     public void menuCategoryRegist(MenuCategoryRegist menuCategoryRegist) {
-        DineReserveStoreInfo dineReserveStoreInfo = dineReserveStoreInfoRepository.findByStoreUUID(menuCategoryRegist.getStoreUUID())
-                .orElseThrow(() -> new DineReserveException(StoreErrorCode.NO_STORE_INFO));
+        DineReserveStoreInfo dineReserveStoreInfo = storeInfoService.getStoreInfo(menuCategoryRegist.getStoreUUID());
 
         dineReserveMenuCategoryRepository.findByStoreUUIDAndMenuCategoryName(dineReserveStoreInfo.getStoreUUID(), menuCategoryRegist.getMenuCategoryName()).ifPresent(x -> {
             throw new DineReserveException(MenuErrorCode.EXIST_MENU_CATEGORY);
@@ -43,16 +44,13 @@ public class MenuCategoryService {
 
     @Transactional
     public void menuCategoryUpdate(MenuCategoryUpdate menuCategoryUpdate) {
-        DineReserveMenuCategory dineReserveMenuCategory = dineReserveMenuCategoryRepository.findByMenuCategoryUUID(menuCategoryUpdate.getMenuCategoryUUID())
-                .orElseThrow(() -> new DineReserveException(MenuErrorCode.NO_MENU_CATEGORY));
-
+        DineReserveMenuCategory dineReserveMenuCategory = getMenuCategory(menuCategoryUpdate.getMenuCategoryUUID());
         dineReserveMenuCategory.update(menuCategoryUpdate);
     }
 
     @Transactional
     public void menuCategoryDelete(UUID menuCategoryUUID) {
-        DineReserveMenuCategory dineReserveMenuCategory = dineReserveMenuCategoryRepository.findByMenuCategoryUUID(menuCategoryUUID)
-                .orElseThrow(() -> new DineReserveException(MenuErrorCode.NO_MENU_CATEGORY));
+        DineReserveMenuCategory dineReserveMenuCategory = getMenuCategory(menuCategoryUUID);
 
         int count = dineReserveMenuInfoRepository.countByMenuCategoryUUID(dineReserveMenuCategory.getMenuCategoryUUID());
         if (count > 0) throw new DineReserveException(MenuErrorCode.USE_MENU_CATEGORY);
@@ -62,9 +60,7 @@ public class MenuCategoryService {
 
     @Transactional
     public void menuCategoryActive(MenuCategoryActive menuCategoryActive) {
-        DineReserveMenuCategory dineReserveMenuCategory = dineReserveMenuCategoryRepository.findByMenuCategoryUUID(menuCategoryActive.getMenuCategoryUUID())
-                .orElseThrow(() -> new DineReserveException(MenuErrorCode.NO_MENU_CATEGORY));
-
+        DineReserveMenuCategory dineReserveMenuCategory = getMenuCategory(menuCategoryActive.getMenuCategoryUUID());
         dineReserveMenuCategory.updateUseFlag(menuCategoryActive.isUseFlag());
     }
 
@@ -86,5 +82,10 @@ public class MenuCategoryService {
 
     public List<MenuCategoryListAll> menuCategoryListTotal(UUID storeUUID) {
         return dineReserveMenuCategoryRepository.findMenuCategoryListAll(storeUUID, true);
+    }
+
+    public DineReserveMenuCategory getMenuCategory(UUID menuCategoryUUID) {
+        return dineReserveMenuCategoryRepository.findByMenuCategoryUUID(menuCategoryUUID)
+                .orElseThrow(() -> new DineReserveException(MenuErrorCode.NO_MENU_CATEGORY));
     }
 }
