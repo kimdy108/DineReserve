@@ -1,5 +1,6 @@
 package com.project.dine.reserve.service.booking;
 
+import com.project.dine.reserve.config.annotation.RedissonLock;
 import com.project.dine.reserve.config.exception.DineReserveException;
 import com.project.dine.reserve.domain.booking.DineReserveBooking;
 import com.project.dine.reserve.domain.store.DineReserveStoreInfo;
@@ -35,7 +36,7 @@ public class BookingService {
 
     private final DineReserveBookingRepository dineReserveBookingRepository;
 
-    @Transactional
+    @RedissonLock("lock:reservation:#{#bookingRegist.storeUUID}:#{#bookingRegist.bookingDate.toString()}")
     public void bookingRegist(BookingRegist bookingRegist) {
         DineReserveStoreInfo dineReserveStoreInfo = storeInfoService.getStoreInfo(bookingRegist.getStoreUUID());
         Long bookingRegistrantSeq = getBookingRegistrantSeq(bookingRegist.getBookingType(), bookingRegist.getBookingRegistrantUUID());
@@ -44,7 +45,7 @@ public class BookingService {
         dineReserveBookingRepository.save(dineReserveBooking);
     }
 
-    @Transactional
+    @RedissonLock("lock:reservation:#{#bookingUpdate.storeUUID}:#{#bookingUpdate.bookingDate.toString()}")
     public void bookingUpdate(BookingUpdate bookingUpdate, String token) {
         DineReserveBooking dineReserveBooking = getBooking(bookingUpdate.getBookingUUID());
 
@@ -111,16 +112,16 @@ public class BookingService {
             case ADMIN -> adminService.getAdmin(bookinTypeUUID).getAdminName();
             case MEMBER -> memberService.getMember(bookinTypeUUID).getMemberName();
             case GUEST -> guestService.getGuest(bookinTypeUUID).getGuestName();
-            case NONE -> throw new DineReserveException(BookingErrorCode.NOT_VALID_TYPE);
+            case NONE -> "";
         };
     }
 
     private boolean bookingBasicValid(DineReserveBooking dineReserveBooking, String token) {
-        UUID actorUUID = jwtUtil.getUserUUID(token);
+        UUID actorUUID = jwtUtil.getUserUUID(token.replace("Bearer ", ""));
         return dineReserveBooking.getBookingRegistrantUUID().equals(actorUUID) || bookingAdminValid(token);
     }
 
     private boolean bookingAdminValid(String token) {
-        return jwtUtil.isAdmin(token);
+        return jwtUtil.isAdmin(token.replace("Bearer ", ""));
     }
 }

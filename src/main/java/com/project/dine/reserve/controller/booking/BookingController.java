@@ -59,9 +59,9 @@ public class BookingController {
     @Operation(summary = "booking list page", description = "예약 리스트 (페이지)")
     @GetMapping("/list/page")
     public ResponseEntity<BaseResponse<Page<BookingList>>> bookingListPage(
-            @RequestParam UUID storeUUID,
-            @RequestParam UUID bookingRegistrantUUID,
-            @RequestParam LocalDateTime bookingDate,
+            @RequestParam(required = false) UUID storeUUID,
+            @RequestParam(required = false) UUID bookingRegistrantUUID,
+            @RequestParam(required = false) LocalDateTime bookingDate,
             @RequestParam Long offset,
             @RequestParam int limit
     ) {

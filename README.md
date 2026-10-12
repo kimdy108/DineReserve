@@ -55,7 +55,7 @@ Redis 기반 분산 락으로 동시성을 제어하고, 스케줄러로 예약 
 
 ### 동시성 제어 + 중복 방지
 
-- Redis 분산 락(`lock:reservation:{storeUUID}:{date}:{slot}`)으로 슬롯 단위 직렬화
+- Redis 분산 락(`lock:reservation:{storeUUID}:{DateTime}`)으로 슬롯 단위 직렬화
 - 락 구간 안에서 `잔여 정원 확인 → 차감 → 예약 저장`을 원자적으로 처리해 오버부킹 방지
 - 동일인 중복 예약 차단: 회원 = `memberUUID`, 비회원 = `전화번호` 기준
 

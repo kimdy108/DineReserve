@@ -12,6 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class BookingUpdate {
     private UUID bookingUUID;
+    private UUID storeUUID;
     private String bookingGuestName;
     private String bookingGuestPhone;
     private int bookingPeopleCount;
