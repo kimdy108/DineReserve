@@ -13,6 +13,7 @@ import com.project.dine.reserve.service.member.GuestService;
 import com.project.dine.reserve.service.member.MemberService;
 import com.project.dine.reserve.service.store.StoreInfoService;
 import com.project.dine.reserve.util.JWTUtil;
+import com.project.dine.reserve.validator.BookingValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,7 +28,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class BookingService {
-    private final JWTUtil jwtUtil;
+    private final BookingValidator bookingValidator;
 
     private final AdminService adminService;
     private final MemberService memberService;
@@ -49,7 +50,7 @@ public class BookingService {
     public void bookingUpdate(BookingUpdate bookingUpdate, String token) {
         DineReserveBooking dineReserveBooking = getBooking(bookingUpdate.getBookingUUID());
 
-        if (!bookingBasicValid(dineReserveBooking, token)) throw new DineReserveException(BookingErrorCode.NOT_VALID_UPDATE);
+        if (!bookingValidator.checkUserValid(dineReserveBooking, token)) throw new DineReserveException(BookingErrorCode.NOT_VALID_UPDATE);
 
         dineReserveBooking.update(bookingUpdate);
     }
@@ -58,7 +59,7 @@ public class BookingService {
     public void bookingCancel(BookingCancel bookingCancel, String token) {
         DineReserveBooking dineReserveBooking = getBooking(bookingCancel.getBookingUUID());
 
-        if (!bookingBasicValid(dineReserveBooking, token)) throw new DineReserveException(BookingErrorCode.NOT_VALID_CANCEL);
+        if (!bookingValidator.checkUserValid(dineReserveBooking, token)) throw new DineReserveException(BookingErrorCode.NOT_VALID_CANCEL);
 
         dineReserveBooking.cancel(bookingCancel, getBookingRegistrantSeq(bookingCancel.getCancelType(), bookingCancel.getCancelRegistrantUUID()));
     }
@@ -71,7 +72,7 @@ public class BookingService {
 
     @Transactional
     public void bookingDelete(UUID bookingUUID, String token) {
-        if (!bookingAdminValid(token)) throw new DineReserveException(BookingErrorCode.NOT_VALID_DELETE);
+        if (!bookingValidator.checkAdminValid(token)) throw new DineReserveException(BookingErrorCode.NOT_VALID_DELETE);
 
         DineReserveBooking dineReserveBooking = getBooking(bookingUUID);
         dineReserveBooking.updateUseFlag(false);
@@ -114,14 +115,5 @@ public class BookingService {
             case GUEST -> guestService.getGuest(bookinTypeUUID).getGuestName();
             case NONE -> "";
         };
-    }
-
-    private boolean bookingBasicValid(DineReserveBooking dineReserveBooking, String token) {
-        UUID actorUUID = jwtUtil.getUserUUID(token.replace("Bearer ", ""));
-        return dineReserveBooking.getBookingRegistrantUUID().equals(actorUUID) || bookingAdminValid(token);
-    }
-
-    private boolean bookingAdminValid(String token) {
-        return jwtUtil.isAdmin(token.replace("Bearer ", ""));
     }
 }
